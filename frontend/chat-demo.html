@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Chat Demo - EduShop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+        .chat-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .chat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .chat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .chat-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        .chat-card p {
+            opacity: 0.9;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+        .status.active {
+            background: #10b981;
+        }
+        .status.pending {
+            background: #f59e0b;
+        }
+        .instructions {
+            background: #f3f4f6;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        .instructions h2 {
+            color: #374151;
+            margin-bottom: 15px;
+        }
+        .instructions ol {
+            margin-left: 20px;
+            color: #6b7280;
+            line-height: 1.8;
+        }
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        .demo-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <span class="demo-badge">✅ LIVE DEMO</span>
+        <h1>🎯 Live Chat Support</h1>
+        <p class="subtitle">Hệ thống hỗ trợ khách hàng đa kênh cho EduShop</p>
+
+        <div class="chat-options">
+            <div class="chat-card">
+                <h3>💬 Custom Chat</h3>
+                <p>Chat tùy chỉnh với giao diện đẹp, tích hợp sẵn vào website</p>
+                <span class="status active">✅ Đã tích hợp</span>
+            </div>
+
+            <div class="chat-card">
+                <h3>🚀 Tawk.to</h3>
+                <p>Plugin chat chuyên nghiệp, miễn phí, có mobile app</p>
+                <span class="status pending">⚙️ Cần cấu hình</span>
+            </div>
+
+            <div class="chat-card">
+                <h3>📘 Messenger</h3>
+                <p>Chat qua Facebook Messenger, phổ biến tại VN</p>
+                <span class="status pending">⚙️ Cần cấu hình</span>
+            </div>
+
+            <div class="chat-card">
+                <h3>💙 Zalo OA</h3>
+                <p>Chat qua Zalo Official Account, người Việt yêu thích</p>
+                <span class="status pending">⚙️ Cần cấu hình</span>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <h2>📋 Hướng dẫn sử dụng</h2>
+            <ol>
+                <li><strong>Custom Chat:</strong> Đã hoạt động ngay! Mở website và tìm nút chat ở góc phải dưới 💬</li>
+                <li><strong>Tawk.to:</strong> Đăng ký tại <a href="https://www.tawk.to/" target="_blank">tawk.to</a>, lấy Property ID và Widget ID</li>
+                <li><strong>Facebook Messenger:</strong> Tạo Facebook Page, lấy Page ID và cấu hình plugin</li>
+                <li><strong>Zalo OA:</strong> Đăng ký tại <a href="https://oa.zalo.me/" target="_blank">oa.zalo.me</a>, lấy OA ID</li>
+                <li><strong>Chi tiết:</strong> Xem file <code>CHAT_QUICK_START.md</code> để biết cách cấu hình</li>
+            </ol>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center; color: #6b7280;">
+            <p>💡 <strong>Tip:</strong> Nên sử dụng 2-3 kênh chat để phục vụ khách hàng tốt nhất!</p>
+        </div>
+    </div>
+
+    <!-- Tawk.to Demo (Uncomment when you have IDs) -->
+    <!--
+    <script type="text/javascript">
+    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+    (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/YOUR_PROPERTY_ID/YOUR_WIDGET_ID';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+    })();
+    </script>
+    -->
+</body>
+</html>

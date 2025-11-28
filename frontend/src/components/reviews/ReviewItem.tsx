@@ -1,32 +1,71 @@
 import React from "react";
-import { StarRating } from "@/components/ui/StarRating";
+import StarRating from "../ui/StarRating";
 
-export interface Review {
-  user: string;
-  avatar: string;
+interface Review {
+  id: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
   rating: number;
   comment: string;
-  date: string;
+  createdAt: string;
+  helpful?: number;
 }
 
-export const ReviewItem: React.FC<{ review: Review }> = ({ review }) => {
+interface ReviewItemProps {
+  review: Review;
+}
+
+const ReviewItem: React.FC<ReviewItemProps> = ({ review }) => {
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
   return (
-    <div className="border-b border-border pb-2 border-gray-300">
-      <div className="flex items-center gap-2 mb-1">
+    <div className="border-b border-gray-200 pb-6 last:border-b-0">
+      <div className="flex items-start gap-4">
+        {/* Avatar */}
         <img
-          src={review.avatar}
-          alt={review.user}
-          className="w-8 h-8 rounded-full"
+          src={
+            review.userAvatar ||
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(
+              review.userName
+            )}&background=0D8ABC&color=fff`
+          }
+          alt={review.userName}
+          className="w-12 h-12 rounded-full object-cover"
         />
-        <div>
-          <p className="text-sm font-medium">{review.user}</p>
-          <StarRating rating={review.rating} />
+
+        {/* Content */}
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="font-semibold text-gray-900">{review.userName}</h4>
+            <span className="text-sm text-gray-500">
+              {formatDate(review.createdAt)}
+            </span>
+          </div>
+
+          <StarRating rating={review.rating} size="small" />
+
+          <p className="mt-3 text-gray-700 leading-relaxed">{review.comment}</p>
+
+          {/* Helpful Button */}
+          {review.helpful !== undefined && (
+            <div className="mt-4">
+              <button className="text-sm text-gray-600 hover:text-blue-600 transition-colors">
+                👍 Helpful ({review.helpful})
+              </button>
+            </div>
+          )}
         </div>
       </div>
-      <p className="text-sm text-gray-600 dark:text-gray-300 italic">
-        "{review.comment}"
-      </p>
-      <p className="text-xs text-gray-400 mt-1">{review.date}</p>
     </div>
   );
 };
+
+export default ReviewItem;

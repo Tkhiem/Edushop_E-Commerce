@@ -1,166 +1,135 @@
-import pool from "../config/database.js";
+import Course from "../models/Course.js";
 
 /**
- * Lấy danh sách tất cả courses
- * GET /api/courses
+ * @desc    Get all courses
+ * @route   GET /api/courses
+ * @access  Public
  */
-export const getAllCourses = async (req, res) => {
+export const getCourses = async (req, res) => {
   try {
-    const [rows] = await pool.query("SELECT * FROM courses");
+    const {
+      category,
+      level,
+      minPrice,
+      maxPrice,
+      search,
+      sort,
+      page = 1,
+      limit = 12,
+    } = req.query;
 
-    res.json({
-      success: true,
-      count: rows.length,
-      data: rows,
-    });
-  } catch (error) {
-    console.error("Error fetching courses:", error);
-    res.status(500).json({
-      success: false,
-      message: "Không thể lấy danh sách khóa học",
-      error: error.message,
-    });
-  }
-};
+    // Build query
+    const query = {};
 
-/**
- * Lấy 1 course theo ID
- * GET /api/courses/:id
- */
-export const getCourseById = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const [rows] = await pool.query("SELECT * FROM courses WHERE id = ?", [id]);
-
-    if (rows.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Không tìm thấy khóa học",
-      });
+    if (category) {
+      query.category = category;
     }
 
-    res.json({
-      success: true,
-      data: rows[0],
-    });
-  } catch (error) {
-    console.error("Error fetching course:", error);
-    res.status(500).json({
-      success: false,
-      message: "Lỗi khi lấy thông tin khóa học",
-      error: error.message,
-    });
-  }
-};
-
-/**
- * Tạo course mới
- * POST /api/courses
- */
-export const createCourse = async (req, res) => {
-  try {
-    const { name, type, category, level, price, originalPrice, description } =
-      req.body;
-
-    // Validation cơ bản
-    if (!name || !price) {
-      return res.status(400).json({
-        success: false,
-        message: "Thiếu thông tin bắt buộc (name, price)",
-      });
+    if (level) {
+      query.level = level;
     }
 
-    const [result] = await pool.query(
-      "INSERT INTO courses (name, type, category, level, price, originalPrice, description) VALUES (?, ?, ?, ?, ?, ?, ?)",
-      [name, type, category, level, price, originalPrice, description]
-    );
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
 
-    res.status(201).json({
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { instructor: { $regex: search, $options: "i" } },
+      ];
+    }
+
+    // Build sort
+    let sortOption = {};
+    switch (sort) {
+      case "price-asc":
+        sortOption = { price: 1 };
+        break;
+      case "price-desc":
+        sortOption = { price: -1 };
+        break;
+      case "rating":
+        sortOption = { rating: -1 };
+        break;
+      case "popular":
+        sortOption = { students: -1 };
+        break;
+      case "newest":
+      default:
+        sortOption = { publishedDate: -1 };
+    }
+
+    // Execute query with pagination
+    const skip = (Number(page) - 1) * Number(limit);
+    const courses = await Course.find(query)
+      .sort(sortOption)
+      .limit(Number(limit))
+      .skip(skip)
+      .lean();
+
+    // Get total count
+    const total = await Course.countDocuments(query);
+
+    // ✅ RESPONSE FORMAT MỚI - Khớp với frontend
+    res.json({
       success: true,
-      message: "Tạo khóa học thành công",
-      data: {
-        id: result.insertId,
-        ...req.body,
+      data: courses,
+      pagination: {
+        page: Number(page),
+        limit: Number(limit),
+        totalCourses: total,
+        totalPages: Math.ceil(total / Number(limit)),
       },
     });
   } catch (error) {
-    console.error("Error creating course:", error);
-    res.status(500).json({
+    console.error("Error fetching courses:", error);
+    res.status(500).json({ 
       success: false,
-      message: "Lỗi khi tạo khóa học",
-      error: error.message,
+      message: "Server error", 
+      error: error.message 
     });
   }
 };
 
 /**
- * Cập nhật course
- * PUT /api/courses/:id
+ * @desc    Get course by ID
+ * @route   GET /api/courses/:id
+ * @access  Public
  */
-export const updateCourse = async (req, res) => {
+export const getCourseById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const updates = req.body;
+    const course = await Course.findById(req.params.id).lean();
 
-    // Tạo câu SQL động dựa trên fields có trong request
-    const fields = Object.keys(updates)
-      .map((key) => `${key} = ?`)
-      .join(", ");
-    const values = [...Object.values(updates), id];
-
-    const [result] = await pool.query(
-      `UPDATE courses SET ${fields} WHERE id = ?`,
-      values
-    );
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Không tìm thấy khóa học",
-      });
+    if (!course) {
+      return res.status(404).json({ message: "Course not found" });
     }
 
-    res.json({
-      success: true,
-      message: "Cập nhật khóa học thành công",
-    });
+    res.json(course);
   } catch (error) {
-    console.error("Error updating course:", error);
-    res.status(500).json({
-      success: false,
-      message: "Lỗi khi cập nhật khóa học",
-      error: error.message,
-    });
+    console.error("Error fetching course:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };
 
 /**
- * Xóa course
- * DELETE /api/courses/:id
+ * @desc    Get featured courses
+ * @route   GET /api/courses/featured
+ * @access  Public
  */
-export const deleteCourse = async (req, res) => {
+export const getFeaturedCourses = async (req, res) => {
   try {
-    const { id } = req.params;
+    const courses = await Course.find({ isBestseller: true })
+      .sort({ students: -1 })
+      .limit(8)
+      .lean();
 
-    const [result] = await pool.query("DELETE FROM courses WHERE id = ?", [id]);
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Không tìm thấy khóa học",
-      });
-    }
-
-    res.json({
-      success: true,
-      message: "Xóa khóa học thành công",
-    });
+    res.json(courses);
   } catch (error) {
-    console.error("Error deleting course:", error);
-    res.status(500).json({
-      success: false,
-      message: "Lỗi khi xóa khóa học",
-      error: error.message,
-    });
+    console.error("Error fetching featured courses:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
   }
 };

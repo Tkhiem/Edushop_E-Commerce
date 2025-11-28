@@ -1,27 +1,27 @@
-import { ReactNode, useState } from "react";
+import React, { useState } from "react";
 
 interface CollapsibleSectionProps {
   title: string;
-  children: ReactNode;
+  children: React.ReactNode;
   defaultOpen?: boolean;
 }
 
-export default function CollapsibleSection({
+const CollapsibleSection: React.FC<CollapsibleSectionProps> = ({
   title,
   children,
   defaultOpen = false,
-}: CollapsibleSectionProps) {
+}) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border-b border-gray-200 py-4">
+    <div className="border-b border-gray-200 last:border-b-0">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full text-left font-medium hover:text-green-600 transition-colors"
+        className="w-full py-4 flex justify-between items-center hover:bg-gray-50 transition-colors"
       >
-        <span>{title}</span>
+        <span className="font-medium text-gray-900">{title}</span>
         <svg
-          className={`w-4 h-4 transition-transform ${
+          className={`w-5 h-5 transition-transform ${
             isOpen ? "rotate-180" : ""
           }`}
           fill="none"
@@ -36,7 +36,13 @@ export default function CollapsibleSection({
           />
         </svg>
       </button>
-      {isOpen && <div className="mt-3">{children}</div>}
+      {isOpen && <div className="pb-4">{children}</div>}
     </div>
   );
-}
+};
+
+// Named export
+export { CollapsibleSection };
+
+// Default export
+export default CollapsibleSection;

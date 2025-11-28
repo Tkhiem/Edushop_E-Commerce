@@ -1,111 +1,120 @@
 import React from "react";
-import clsx from "clsx";
-import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
-type PaginationProps = {
-  total: number;
-  pageSize: number;
+interface PaginationProps {
   currentPage: number;
+  totalPages: number;
   onPageChange: (page: number) => void;
-  className?: string;
-};
+  maxVisible?: number;
+}
 
 const Pagination: React.FC<PaginationProps> = ({
-  total,
-  pageSize,
   currentPage,
+  totalPages,
   onPageChange,
-  className = "",
+  maxVisible = 5,
 }) => {
-  const totalPages = Math.ceil(total / pageSize);
   if (totalPages <= 1) return null;
 
-  const createPageNumbers = () => {
-    const pages: (number | "...")[] = [];
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = [];
+    const halfVisible = Math.floor(maxVisible / 2);
 
-    if (totalPages <= 7) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i);
-    } else {
-      if (currentPage <= 4) {
-        pages.push(1, 2, 3, 4, 5, "...", totalPages);
-      } else if (currentPage >= totalPages - 3) {
-        pages.push(
-          1,
-          "...",
-          totalPages - 4,
-          totalPages - 3,
-          totalPages - 2,
-          totalPages - 1,
-          totalPages
-        );
-      } else {
-        pages.push(
-          1,
-          "...",
-          currentPage - 1,
-          currentPage,
-          currentPage + 1,
-          "...",
-          totalPages
-        );
-      }
+    let startPage = Math.max(1, currentPage - halfVisible);
+    let endPage = Math.min(totalPages, currentPage + halfVisible);
+
+    // Adjust if we're near the start
+    if (currentPage <= halfVisible) {
+      endPage = Math.min(totalPages, maxVisible);
+    }
+
+    // Adjust if we're near the end
+    if (currentPage >= totalPages - halfVisible) {
+      startPage = Math.max(1, totalPages - maxVisible + 1);
+    }
+
+    // Add first page and ellipsis
+    if (startPage > 1) {
+      pages.push(1);
+      if (startPage > 2) pages.push("...");
+    }
+
+    // Add visible pages
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+
+    // Add ellipsis and last page
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) pages.push("...");
+      pages.push(totalPages);
     }
 
     return pages;
   };
 
-  const pages = createPageNumbers();
+  const pages = getPageNumbers();
 
   return (
-    <div className={clsx("mt-12 space-y-3", className)}>
-      {/* Nút trang */}
-      <div className="flex items-center justify-center gap-1 flex-wrap">
-        <button
-          className="p-2 border border-primary rounded-full disabled:opacity-50 hover:bg-primary/20 cursor-pointer"
-          disabled={currentPage === 1}
-          onClick={() => onPageChange(currentPage - 1)}
-        >
-          <MdChevronLeft className="w-5 h-5 text-primary" />
-        </button>
+    <nav className="flex items-center justify-center gap-2">
+      {/* Previous Button */}
+      <button
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+          currentPage === 1
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border border-gray-300"
+        }`}
+      >
+        Previous
+      </button>
 
-        {pages.map((page, index) =>
-          page === "..." ? (
-            <span key={index} className="px-2 text-gray-400">
-              ...
-            </span>
-          ) : (
-            <button
-              key={page}
-              className={clsx(
-                "px-3 py-1 text-primary font-bold",
-                currentPage === page
-                  ? "relative"
-                  : "hover:bg-primary/20 rounded cursor-pointer"
-              )}
-              onClick={() => onPageChange(Number(page))}
-            >
+      {/* Page Numbers */}
+      <div className="flex items-center gap-1">
+        {pages.map((page, index) => {
+          if (page === "...") {
+            return (
               <span
-                className={clsx(
-                  currentPage === page
-                    ? "border-b-2 border-primary inline-block px-1"
-                    : ""
-                )}
+                key={`ellipsis-${index}`}
+                className="px-3 py-2 text-gray-400"
               >
-                {page}
+                ...
               </span>
-            </button>
-          )
-        )}
+            );
+          }
 
-        <button
-          className="p-2 border border-primary rounded-full disabled:opacity-50 hover:bg-primary/20 cursor-pointer"
-          disabled={currentPage === totalPages}
-          onClick={() => onPageChange(currentPage + 1)}
-        >
-          <MdChevronRight className="w-5 h-5 text-primary" />
-        </button>
+          const pageNum = page as number;
+          const isActive = pageNum === currentPage;
+
+          return (
+            <button
+              key={pageNum}
+              onClick={() => onPageChange(pageNum)}
+              className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                isActive
+                  ? "bg-blue-600 text-white shadow-lg scale-105"
+                  : "bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border border-gray-300"
+              }`}
+            >
+              {pageNum}
+            </button>
+          );
+        })}
       </div>
-    </div>
+
+      {/* Next Button */}
+      <button
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+          currentPage === totalPages
+            ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+            : "bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-600 border border-gray-300"
+        }`}
+      >
+        Next
+      </button>
+    </nav>
   );
 };
 

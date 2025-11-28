@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Facebook Messenger Test</title>
+</head>
+<body>
+  <h1>Facebook Messenger Widget Test</h1>
+  <p>Trang này test trực tiếp Facebook Messenger widget</p>
+  
+  <div style="padding: 20px; background: #f0f0f0; margin: 20px;">
+    <h2>Kiểm tra:</h2>
+    <ol>
+      <li>Page ID: <strong>949394608251189</strong></li>
+      <li>Xem có icon Messenger ở góc dưới bên phải không?</li>
+      <li>Mở F12 Console để xem log</li>
+    </ol>
+  </div>
+
+  <!-- Facebook Messenger Plugin Code -->
+  <div id="fb-root"></div>
+
+  <!-- Your SDK Plugin Code -->
+  <div id="fb-customer-chat" class="fb-customerchat"></div>
+
+  <script>
+    var chatbox = document.getElementById('fb-customer-chat');
+    chatbox.setAttribute("page_id", "949394608251189");
+    chatbox.setAttribute("attribution", "biz_inbox");
+  </script>
+
+  <!-- Load Facebook SDK for JavaScript -->
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        xfbml            : true,
+        version          : 'v19.0'
+      });
+      console.log('✅ Facebook SDK loaded');
+      
+      // Kiểm tra sau 3 giây
+      setTimeout(() => {
+        const iframes = document.querySelectorAll('iframe');
+        console.log('🔍 Total iframes found:', iframes.length);
+        
+        const messengerIframes = Array.from(iframes).filter(iframe => 
+          iframe.title && iframe.title.toLowerCase().includes('messenger')
+        );
+        console.log('📨 Messenger iframes:', messengerIframes.length);
+        
+        if (messengerIframes.length === 0) {
+          console.warn('⚠️ NO MESSENGER WIDGET FOUND!');
+          console.warn('💡 Nguyên nhân có thể:');
+          console.warn('   1. Page chưa PUBLIC');
+          console.warn('   2. Messenger chưa bật trong Page Settings');
+          console.warn('   3. Page Category không hỗ trợ Messenger');
+          console.warn('');
+          console.warn('🔗 Kiểm tra Page tại:');
+          console.warn('   https://www.facebook.com/profile.php?id=949394608251189');
+        } else {
+          console.log('✅ Messenger widget loaded successfully!');
+        }
+      }, 3000);
+    };
+
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = 'https://connect.facebook.net/vi_VN/sdk.js';
+      js.onload = function() {
+        console.log('📥 SDK script loaded successfully');
+      };
+      js.onerror = function() {
+        console.error('❌ Failed to load SDK');
+      };
+      fjs.parentNode.insertBefore(js, fjs);
+      console.log('⏳ Loading Facebook SDK...');
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
+</body>
+</html>

@@ -1,21 +1,13 @@
-const express = require("express");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const app = express();
-const PORT = 8080;
-const orderRoutes = require("./routes/orders");
-dotenv.config();
+// ...existing code...
+import reviewsRouter from "./routes/reviews.js";
 
-app.use(cors());
-app.use(express.json());
+// ...existing code...
 
-// Route test
-app.get("/", (req, res) => {
-  res.send("Hello Node.js!");
-});
+// Routes
+app.use("/api/courses", coursesRouter);
+app.use("/api/categories", categoriesRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/api/favorites", favoritesRouter);
+app.use("/api/reviews", reviewsRouter); // ✅ Add this line
 
-app.use("/api/paypal", orderRoutes);
-// Lắng nghe cổng
-app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+// ...existing code...

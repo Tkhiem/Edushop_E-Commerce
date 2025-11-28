@@ -1,26 +1,52 @@
 export interface Product {
   id: string;
-  name: string;
-  type: "Lớp học" | "Tài liệu" | "Công cụ";
-  category: string;
-  level: "Beginner" | "Intermediate" | "Advanced";
+  _id?: string; // ✅ MongoDB ID from backend
+  title: string;
+  slug: string;
+  description: string;
+  thumbnail: string;
   price: number;
   originalPrice: number;
-  image: string;
-  description: string;
-  longDescription: string;
+  discountedPrice: number;
+  discountPercentage: number;
+  category: string;
   instructor: string;
-  duration: string;
   rating: number;
-  countRating: number;
+  students: number;
+  reviews: number;
+  level: string;
   language: string;
+  duration: number;
+  lectures: number;
+  isBestseller: boolean;
+  isNew: boolean;
   tags: string[];
-  features: string[];
+  url?: string;
+  udemy_id?: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
-export interface ViewedProductEntry {
-  product: Product;
-  viewedTimes: number;
-  lastViewedAt: string;
-  history: string[]; // timestamp history
+export interface CourseFilters {
+  page?: number;
+  limit?: number;
+  category?: string;
+  level?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  search?: string;
+  sort?: string;
+  rating?: number;
+  instructor?: string;
+}
+
+export interface CoursesResponse {
+  success: boolean;
+  data: Product[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
 }

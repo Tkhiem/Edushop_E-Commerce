@@ -1,81 +1,100 @@
 import React from "react";
-import clsx from "clsx";
 
-export type StarRatingProps = {
+interface StarRatingProps {
   rating: number;
-  outOf?: number;
-  size?: number;
-  className?: string;
+  maxRating?: number;
+  size?: "small" | "medium" | "large";
   showValue?: boolean;
-  countRating?: number;
-};
+  onRatingChange?: (rating: number) => void;
+  readonly?: boolean;
+}
 
-export const StarRating: React.FC<StarRatingProps> = ({
+const StarRating: React.FC<StarRatingProps> = ({
   rating,
-  outOf = 5,
-  size = 14,
-  className = "",
-  showValue = true,
-  countRating,
+  maxRating = 5,
+  size = "medium",
+  showValue = false,
+  onRatingChange,
+  readonly = true,
 }) => {
-  const stars = Array.from({ length: outOf }, (_, i) => i + 1);
-  const rounded = Math.round(rating * 2) / 2;
-  return (
-    <div className={clsx("flex items-center gap-0.5", className)}>
-      {showValue && (
-        <span className="text-sm text-[#8B430A] dark:text-[#d48240] font-bold mr-1">
-          {rating.toFixed(1)}
-        </span>
-      )}
+  const sizeClasses = {
+    small: "w-4 h-4",
+    medium: "w-5 h-5",
+    large: "w-6 h-6",
+  };
 
-      {stars.map((star) => {
-        const isFull = rounded >= star;
-        const isHalf = !isFull && rounded >= star - 0.5;
+  const handleClick = (value: number) => {
+    if (!readonly && onRatingChange) {
+      onRatingChange(value);
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-1">
+      {[...Array(maxRating)].map((_, index) => {
+        const starValue = index + 1;
+        const isFilled = starValue <= Math.round(rating);
+        const isPartial =
+          starValue > Math.floor(rating) && starValue <= Math.ceil(rating);
+        const partialPercentage = isPartial ? (rating % 1) * 100 : 0;
 
         return (
-          <svg
-            key={star}
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            className={clsx(
-              "transition-colors duration-150",
-              isFull
-                ? "fill-star stroke-star"
-                : isHalf
-                ? "fill-star stroke-star"
-                : "fill-gray-200 stroke-gray-300"
-            )}
-            style={{ width: size, height: size }}
+          <button
+            key={index}
+            onClick={() => handleClick(starValue)}
+            disabled={readonly}
+            className={`relative ${
+              readonly ? "cursor-default" : "cursor-pointer hover:scale-110"
+            } transition-transform`}
+            aria-label={`${starValue} stars`}
           >
-            <defs>
-              <linearGradient id={`half-star-${star}`} x1="0" x2="100%">
-                <stop offset="50%" stopColor="#C3710C" />
-                <stop offset="50%" stopColor="#fff" />
-              </linearGradient>
-            </defs>
-
-            <path
-              d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401Z"
-              fill={
-                isFull
-                  ? "#C3710C"
-                  : isHalf
-                  ? `url(#half-star-${star})`
-                  : "#e5e7eb"
-              }
-            />
-          </svg>
+            {isPartial ? (
+              <div className="relative">
+                <svg
+                  className={`${sizeClasses[size]} text-gray-300`}
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <div
+                  className="absolute inset-0 overflow-hidden"
+                  style={{ width: `${partialPercentage}%` }}
+                >
+                  <svg
+                    className={`${sizeClasses[size]} text-yellow-400`}
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                </div>
+              </div>
+            ) : (
+              <svg
+                className={`${sizeClasses[size]} ${
+                  isFilled ? "text-yellow-400" : "text-gray-300"
+                }`}
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            )}
+          </button>
         );
       })}
-
-      {countRating && (
-        <span className="text-[12px] text-gray-400">
-          ({countRating.toLocaleString()})
+      {showValue && (
+        <span className="ml-2 text-sm font-medium text-gray-700">
+          {rating.toFixed(1)}
         </span>
       )}
     </div>
   );
 };
+
+// ✅ Named export (optional)
+export { StarRating };
+
+// ✅ Default export (required)
+export default StarRating;

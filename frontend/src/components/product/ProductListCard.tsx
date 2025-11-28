@@ -25,6 +25,20 @@ const ProductListCard: React.FC<ProductListCardProps> = ({
 }) => {
   const location = useLocation();
   const isHistoryPage = location.pathname === "/history";
+  
+  // ✅ Default images by category
+  const getDefaultImage = (category?: string) => {
+    const categoryImages: Record<string, string> = {
+      "Lập Trình": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=200&h=200&fit=crop",
+      "Kinh Doanh & Tài Chính": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=200&h=200&fit=crop",
+      "Thiết Kế Đồ Họa": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=200&h=200&fit=crop",
+      "Nhạc Cụ": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=200&h=200&fit=crop",
+    };
+    return category ? categoryImages[category] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=200&h=200&fit=crop" : "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=200&h=200&fit=crop";
+  };
+
+  const [imageError, setImageError] = React.useState(false);
+  
   return (
     <div className="flex relative gap-4 py-3 border-b border-gray-300 md:mx-3 mx-0 hover:bg-gray-50 dark:hover:bg-gray-800 transition items-center">
       {/* Image */}
@@ -36,9 +50,10 @@ const ProductListCard: React.FC<ProductListCardProps> = ({
           <Skeleton width="w-24" height="h-24" />
         ) : (
           <img
-            src={product?.image}
-            alt={product?.name}
+            src={imageError ? getDefaultImage(product?.category) : (product?.thumbnail || getDefaultImage(product?.category))}
+            alt={product?.title}
             className="w-full h-full object-cover rounded"
+            onError={() => setImageError(true)}
           />
         )}
       </div>
@@ -60,7 +75,7 @@ const ProductListCard: React.FC<ProductListCardProps> = ({
       >
         <div>
           <h3 className="text-base font-semibold leading-tight line-clamp-1 pr-6 dark:text-gray-100">
-            {loading ? <Skeleton width="w-3/4" height="h-5" /> : product?.name}
+            {loading ? <Skeleton width="w-3/4" height="h-5" /> : product?.title}
           </h3>
 
           <div className="mt-0.5">
@@ -84,7 +99,6 @@ const ProductListCard: React.FC<ProductListCardProps> = ({
               product && (
                 <StarRating
                   rating={product.rating}
-                  countRating={product.countRating}
                 />
               )
             )}

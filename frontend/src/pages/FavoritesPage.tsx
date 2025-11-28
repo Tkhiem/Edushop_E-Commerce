@@ -1,126 +1,57 @@
-// src/pages/FavoritesPage.tsx
-import React, { useEffect, useState } from "react";
-import { useFavorites } from "@/hooks/useFavorites";
-import { mockProducts } from "@/data/products";
-import ProductCard from "@/components/product/ProductCard";
-import ProductListCard from "@/components/product/ProductListCard";
-import { useBreakpoint } from "@/hooks/useBreakpoint";
-import EmptyState from "@/components/EmptyState";
-import emptyFavoriteSVG from "@/assets/favorite.svg";
-import Button from "@/components/ui/Button";
+import React from "react";
 import { Link } from "react-router-dom";
-import clsx from "clsx";
-import ProductDetailModal from "@/components/product/ProductDetailModal";
-import { IoMdHeart, IoMdHeartDislike } from "react-icons/io";
-import { toast } from "sonner";
-import type { Product } from "@/types/product";
-import { useViewedProducts } from "@/hooks/useViewedProducts";
+import ProductCard from "../components/product/ProductCard";
+
+// ✅ CORRECT IMPORT
+import { useFavorites } from "../hooks/useFavorites";
 
 const FavoritesPage: React.FC = () => {
-  const { favorites, toggleFavorite, isFavorite } = useFavorites();
-  const isMobile = useBreakpoint() === "mobile";
+  const { favorites, clearFavorites } = useFavorites();
 
-  const favoriteProducts = mockProducts.filter((p) => favorites.includes(p.id));
-  const { addViewedProduct } = useViewedProducts();
-  const [loading, setLoading] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-
-  useEffect(() => {
-    setLoading(true);
-    const timeout = setTimeout(() => setLoading(false), 1000);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  const handleToggleFavorite = (productId: string) => {
-    const alreadyLiked = isFavorite(productId);
-    toggleFavorite(productId);
-    toast.success(
-      alreadyLiked
-        ? "Đã bỏ yêu thích sản phẩm"
-        : "Đã thêm sản phẩm vào yêu thích",
-      {
-        icon: alreadyLiked ? (
-          <IoMdHeartDislike className="text-gray-400 w-5 h-5" />
-        ) : (
-          <IoMdHeart className="text-red-600 w-5 h-5" />
-        ),
-      }
+  if (favorites.length === 0) {
+    return (
+      <div className="container mx-auto px-4 py-16">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="text-6xl mb-4">❤️</div>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            No favorites yet
+          </h2>
+          <p className="text-gray-600 mb-8">
+            Start adding courses to your favorites to see them here.
+          </p>
+          <Link
+            to="/"
+            className="inline-block bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            Browse Courses
+          </Link>
+        </div>
+      </div>
     );
-  };
-
-  const handleViewDetail = (product: Product) => {
-    addViewedProduct(product);
-    setSelectedProduct(product);
-  };
+  }
 
   return (
-    <div className="container mx-auto md:px-4 md:py-6">
-      {favoriteProducts.length > 0 && (
-        <h1 className="text-2xl font-bold mb-4 dark:text-gray-100">
-          Sản phẩm yêu thích
-        </h1>
-      )}
-
-      {favoriteProducts.length === 0 ? (
-        <EmptyState
-          imageSrc={emptyFavoriteSVG}
-          description="Bạn chưa yêu thích sản phẩm nào."
-          cta={
-            <Link to="/">
-              <Button variant="primary">Lướt để khám phá</Button>
-            </Link>
-          }
-        />
-      ) : loading ? (
-        <div
-          className={clsx({
-            "grid grid-cols-2 lg:grid-cols-3 gap-6": !isMobile,
-            "space-y-2 flex flex-col": isMobile,
-          })}
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900">My Favorites</h1>
+          <p className="text-gray-600 mt-2">
+            {favorites.length} {favorites.length === 1 ? "course" : "courses"}
+          </p>
+        </div>
+        <button
+          onClick={clearFavorites}
+          className="text-red-600 hover:text-red-700 font-medium"
         >
-          {Array.from({ length: 6 }).map((_, i) =>
-            !isMobile ? (
-              <ProductCard key={i} loading />
-            ) : (
-              <ProductListCard key={i} loading />
-            )
-          )}
-        </div>
-      ) : isMobile ? (
-        <div className="space-y-4">
-          {favoriteProducts.map((product) => (
-            <ProductListCard
-              key={product.id}
-              product={product}
-              isLiked={isFavorite(product.id)}
-              onLikeClick={() => toggleFavorite(product.id)}
-              onDetailClick={handleViewDetail}
-            />
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-          {favoriteProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              isLiked={isFavorite(product.id)}
-              onLikeClick={() => toggleFavorite(product.id)}
-              onDetailClick={handleViewDetail}
-            />
-          ))}
-        </div>
-      )}
+          Clear All
+        </button>
+      </div>
 
-      {selectedProduct && (
-        <ProductDetailModal
-          product={selectedProduct}
-          isOpen={true}
-          onClose={() => setSelectedProduct(null)}
-          isLiked={isFavorite(selectedProduct.id)}
-          onLikeClick={handleToggleFavorite}
-        />
-      )}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {favorites.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
     </div>
   );
 };

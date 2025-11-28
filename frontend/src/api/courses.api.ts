@@ -1,53 +1,109 @@
-import axios from "./axiosConfig";
+import axiosInstance from "./axiosConfig";
+import { Product } from "../types/product";
 
-export interface Course {
-  course_id: number;
-  title: string;
-  slug: string;
-  description: string;
-  long_description?: string;
-  thumbnail_url: string;
-  price: number;
-  discounted_price: number;
-  level: string;
-  language: string;
-  duration_minutes: number;
-  category_name: string;
-  category_slug: string;
-  instructor_name: string;
-  instructor_avatar: string;
-  // Thêm các field này nếu backend trả về
-  instructor_email?: string;
-  instructor_bio?: string;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface CoursesResponse {
-  success: boolean;
-  data: Course[];
+interface CoursesResponse {
+  courses: Product[];
   pagination: {
     page: number;
     limit: number;
     total: number;
-    totalPages: number;
+    pages: number;
   };
 }
 
-export const getCourses = async (params?: {
-  category?: string;
-  search?: string;
-  sort?: string;
-  page?: number;
-  limit?: number;
-}): Promise<CoursesResponse> => {
-  const response = await axios.get("/courses", { params });
-  return response.data;
+/**
+ * Fetch all courses (no pagination)
+ */
+export const fetchCourses = async (): Promise<Product[]> => {
+  try {
+    // Request with high limit to get all courses
+    const response = await axiosInstance.get<CoursesResponse>("/courses", {
+      params: { limit: 10000 },
+    });
+
+    // Return courses array
+    return response.data.courses || [];
+  } catch (error: any) {
+    console.error("Error fetching courses:", error);
+
+    // Check if it's a network error
+    if (!error.response) {
+      throw new Error(
+        "Không thể kết nối đến server. Vui lòng kiểm tra backend đang chạy."
+      );
+    }
+
+    throw error;
+  }
 };
 
-export const getCourseById = async (
-  id: number
-): Promise<{ success: boolean; data: Course }> => {
-  const response = await axios.get(`/courses/${id}`);
-  return response.data;
+/**
+ * Fetch courses with pagination
+ */
+export const fetchCoursesPaginated = async (
+  page: number = 1,
+  limit: number = 12,
+  filters?: {
+    category?: string;
+    level?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    search?: string;
+    sort?: string;
+  }
+): Promise<CoursesResponse> => {
+  try {
+    const response = await axiosInstance.get<CoursesResponse>("/courses", {
+      params: {
+        page,
+        limit,
+        ...filters,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching paginated courses:", error);
+    throw error;
+  }
+};
+
+/**
+ * Fetch course by ID
+ */
+export const fetchCourseById = async (id: string): Promise<Product> => {
+  try {
+    const response = await axiosInstance.get<Product>(`/courses/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching course ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Search courses
+ */
+export const searchCourses = async (query: string): Promise<Product[]> => {
+  try {
+    const response = await axiosInstance.get<CoursesResponse>("/courses", {
+      params: { search: query, limit: 1000 },
+    });
+    return response.data.courses || [];
+  } catch (error) {
+    console.error("Error searching courses:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get featured/bestseller courses
+ */
+export const fetchFeaturedCourses = async (): Promise<Product[]> => {
+  try {
+    const response = await axiosInstance.get<Product[]>("/courses/featured");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching featured courses:", error);
+    throw error;
+  }
 };

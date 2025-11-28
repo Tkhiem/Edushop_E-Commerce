@@ -1,0 +1,24 @@
+# RENDER ENVIRONMENT VARIABLES - Copy từng dòng vào Render Dashboard
+
+# 1. MongoDB Connection
+MONGODB_URI=mongodb+srv://edushop_db:TMDT_2025!@edushop-ecommerce.lcsyflt.mongodb.net/edushop_db?retryWrites=true&w=majority&appName=EduShop-Ecommerce
+
+# 2. JWT Secret (dùng cho production)
+JWT_SECRET=edushop_production_2025_secret_key_xyz123abc456def
+
+# 3. Port
+PORT=5000
+
+# 4. Node Environment
+NODE_ENV=production
+
+# 5. Frontend URL (sẽ cập nhật sau khi có Vercel URL)
+FRONTEND_URL=https://edushop.vercel.app
+
+# 6. PayPal Client ID
+PAYPAL_CLIENT_ID=AW2AsaZhe-zYNhtNftfNjgkCfTuqHEsCUXVXG4B3MhHDit1dUIHmOa3qa47HGuTwHcnmJyo6aR4OyY_v
+
+# 7. PayPal Client Secret
+PAYPAL_CLIENT_SECRET=ELeYjQLYAL02oFZO7oeChs1mYmmXojr5oS3PDxjSO_gD8gnSd9WGjM3_rqGkG2ozI_wSyRAzQtkurnmc
+
+# NOTE: Copy value (phần sau dấu =) và paste vào Render

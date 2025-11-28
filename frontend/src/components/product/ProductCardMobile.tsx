@@ -24,6 +24,20 @@ const ProductCardMobile: React.FC<ProductCardMobileProps> = ({
   loading = false,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  
+  // ✅ Default images by category
+  const getDefaultImage = (category?: string) => {
+    const categoryImages: Record<string, string> = {
+      "Lập Trình": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&h=300&fit=crop",
+      "Kinh Doanh & Tài Chính": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop",
+      "Thiết Kế Đồ Họa": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=300&fit=crop",
+      "Nhạc Cụ": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=300&fit=crop",
+    };
+    return category ? categoryImages[category] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop" : "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=300&fit=crop";
+  };
+
+  const [imageError, setImageError] = useState(false);
+  
   return (
     <div
       className={clsx(
@@ -32,7 +46,7 @@ const ProductCardMobile: React.FC<ProductCardMobileProps> = ({
       )}
     >
       {isSuggested && !loading && (
-        <div className="absolute top-2 left-2 bg-yellow-400 text-white text-xs font-semibold px-2 py-1 rounded shadow">
+        <div className="absolute top-2 left-2 bg-yellow-400 text-white text-xs font-semibold px-2 py-1 rounded shadow z-10">
           Đề xuất
         </div>
       )}
@@ -46,7 +60,7 @@ const ProductCardMobile: React.FC<ProductCardMobileProps> = ({
             e.stopPropagation();
             onLikeClick(product.id);
           }}
-          className="absolute top-2 right-2 rounded-full p-1 bg-white shadow"
+          className="absolute top-2 right-2 rounded-full p-1 bg-white shadow z-10"
           title={isLiked ? "Bỏ yêu thích" : "Thêm vào yêu thích"}
         >
           {isLiked || isHovered ? (
@@ -62,11 +76,12 @@ const ProductCardMobile: React.FC<ProductCardMobileProps> = ({
         className="w-full h-40 bg-gray-200 dark:bg-gray-700 rounded-t overflow-hidden"
         onClick={() => product && onDetailClick?.(product)}
       >
-        {!loading && product?.image && (
+        {!loading && product && (
           <img
-            src={product.image}
-            alt={product.name}
+            src={imageError ? getDefaultImage(product.category) : (product.thumbnail || getDefaultImage(product.category))}
+            alt={product.title}
             className="w-full h-full object-cover"
+            onError={() => setImageError(true)}
           />
         )}
       </div>
@@ -78,9 +93,9 @@ const ProductCardMobile: React.FC<ProductCardMobileProps> = ({
       >
         <h3
           className="text-base font-semibold truncate h-6 dark:text-white"
-          title={product?.name}
+          title={product?.title}
         >
-          {loading ? <Skeleton width="w-3/4" height="h-6" /> : product?.name}
+          {loading ? <Skeleton width="w-3/4" height="h-6" /> : product?.title}
         </h3>
 
         <div className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2 min-h-[40px]">
@@ -104,7 +119,6 @@ const ProductCardMobile: React.FC<ProductCardMobileProps> = ({
             product && (
               <StarRating
                 rating={product.rating}
-                countRating={product.countRating}
               />
             )
           )}
