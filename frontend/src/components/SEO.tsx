@@ -31,10 +31,13 @@ const SEO: React.FC<SEOProps> = ({
   price,
   currency = 'VND',
 }) => {
-  // Tạo full URL
+  // Tạo full URL với proper protocol và domain
   const fullUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
-  const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://edushop.vercel.app';
+  const siteUrl = typeof window !== 'undefined' ? window.location.origin : 'https://edushop-e-commerce.vercel.app';
   const fullImage = image.startsWith('http') ? image : `${siteUrl}${image}`;
+  
+  // Canonical URL - đảm bảo format đúng và accessible
+  const canonicalUrl = fullUrl.replace(/\/$/, ''); // Remove trailing slash
   
   // Full title
   const fullTitle = `${title} | EduShop - Nền tảng khóa học trực tuyến`;
@@ -46,7 +49,55 @@ const SEO: React.FC<SEOProps> = ({
       <meta name="description" content={description} />
       {keywords && <meta name="keywords" content={keywords} />}
       <meta name="author" content={author} />
-      <link rel="canonical" href={fullUrl} />
+      <link rel="canonical" href={canonicalUrl} />
+      
+      {/* Schema.org Structured Data */}
+      {type === 'product' && price && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Course",
+            "name": title,
+            "description": description,
+            "image": fullImage,
+            "url": canonicalUrl,
+            "provider": {
+              "@type": "Organization",
+              "name": "EduShop",
+              "url": siteUrl
+            },
+            "offers": {
+              "@type": "Offer",
+              "price": price,
+              "priceCurrency": currency,
+              "availability": "https://schema.org/InStock",
+              "url": canonicalUrl
+            },
+            "courseMode": "online",
+            "teaches": title,
+            "inLanguage": "vi-VN",
+            "educationalLevel": "Beginner to Advanced"
+          })}
+        </script>
+      )}
+      
+      {/* Organization Schema for website type */}
+      {type === 'website' && (
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "name": "EduShop",
+            "description": "Nền tảng khóa học trực tuyến chất lượng cao",
+            "url": siteUrl,
+            "logo": `${siteUrl}/logo.png`,
+            "sameAs": [
+              "https://www.facebook.com/edushop",
+              "https://www.twitter.com/edushop"
+            ]
+          })}
+        </script>
+      )}
       
       {/* Open Graph / Facebook */}
       <meta property="og:type" content={type} />
