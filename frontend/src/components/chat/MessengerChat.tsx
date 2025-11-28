@@ -166,10 +166,7 @@ const MessengerChat = ({ pageId }: { pageId: string }) => {
 
   return (
     <>
-      {/* Debug indicator - remove in production */}
-      <div className="fixed bottom-4 left-4 bg-blue-600 text-white px-3 py-1 rounded text-xs z-40">
-        FB Chat Loading... (Page: {pageId.slice(-4)})
-      </div>
+      {/* Simplified Messenger Widget - no debug clutter */}
 
       {/* Facebook Messenger Customer Chat Widget 
           Docs: https://developers.facebook.com/docs/messenger-platform/discovery/customer-chat-plugin

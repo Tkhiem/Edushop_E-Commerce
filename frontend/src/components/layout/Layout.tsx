@@ -28,9 +28,8 @@ const Layout: React.FC = () => {
   // ⚠️ THAY ĐỔI PAGE ID CỦA BẠN Ở ĐÂY ⚠️
   const FB_PAGE_ID = "61578469015979"; // 👈 Thay số này bằng Page ID của bạn
   
-  // Tự động bật Messenger khi deploy production, tắt trên localhost
-  // Tạm thời bật để test - có thể thay đổi về import.meta.env.PROD sau
-  const ENABLE_MESSENGER = true; // import.meta.env.PROD;
+  // Bật cả Messenger và một fallback chat button đơn giản
+  const ENABLE_MESSENGER = true;
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -50,11 +49,19 @@ const Layout: React.FC = () => {
       {/* Crisp Chat - Plugin chuyên nghiệp (0.5đ) - ĐANG HOẠT ĐỘNG ✅ */}
       <CrispChat />
       
-      {/* Facebook Messenger - Chat qua Messenger (0.5đ) 
-          NOTE: Có thể bị CORS block trên localhost
-          Bật lại khi deploy production bằng cách đổi ENABLE_MESSENGER = true
-      */}
+      {/* Facebook Messenger - Chat qua Messenger (0.5đ) */}
       {ENABLE_MESSENGER && <MessengerChat pageId={FB_PAGE_ID} />}
+      
+      {/* Fallback Simple Chat Button nếu Messenger không load */}
+      <div className="fixed bottom-4 right-20 z-50">
+        <button
+          onClick={() => window.open('https://m.me/61578469015979', '_blank')}
+          className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-colors"
+          title="Chat với chúng tôi qua Messenger"
+        >
+          💬
+        </button>
+      </div>
     </div>
   );
 };
