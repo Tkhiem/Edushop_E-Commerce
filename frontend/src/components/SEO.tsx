@@ -1,5 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+// Google Analytics script
+const GA_ID = import.meta.env.VITE_GA_ID;
 
 interface SEOProps {
   title: string;

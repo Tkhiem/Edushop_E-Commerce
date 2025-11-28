@@ -274,6 +274,31 @@ const HomePage: React.FC = () => {
         type="website"
       />
 
+      {/* Đoạn text SEO: mô tả, FAQ, lợi ích */}
+      <section style={{margin: '32px 0', padding: '24px', background: '#f8f8fc', borderRadius: '12px'}}>
+        <h2>EduShop - Nền tảng khóa học trực tuyến hàng đầu Việt Nam</h2>
+        <p>
+          EduShop cung cấp hàng ngàn khóa học chất lượng cao về lập trình, thiết kế, marketing, kinh doanh, ngoại ngữ và nhiều lĩnh vực khác. Bạn có thể học mọi lúc, mọi nơi với đội ngũ giảng viên uy tín, nội dung cập nhật liên tục và hỗ trợ 24/7.
+        </p>
+        <h3>Những lợi ích khi học tại EduShop</h3>
+        <ul>
+          <li>Truy cập kho kiến thức khổng lồ với chi phí hợp lý</li>
+          <li>Chứng nhận hoàn thành khóa học uy tín</li>
+          <li>Hỗ trợ trực tuyến qua Messenger, Zalo, và Live Chat</li>
+          <li>Cập nhật nội dung mới liên tục</li>
+          <li>Học tập linh hoạt trên mọi thiết bị</li>
+        </ul>
+        <h3>Câu hỏi thường gặp (FAQ)</h3>
+        <dl>
+          <dt>EduShop có miễn phí không?</dt>
+          <dd>Một số khóa học miễn phí, phần lớn là trả phí với giá ưu đãi.</dd>
+          <dt>Tôi có được cấp chứng chỉ sau khi học không?</dt>
+          <dd>Có, bạn sẽ nhận chứng chỉ điện tử sau khi hoàn thành khóa học.</dd>
+          <dt>Làm sao để liên hệ hỗ trợ?</dt>
+          <dd>Bạn có thể chat trực tiếp qua Messenger, Zalo hoặc Live Chat trên website.</dd>
+        </dl>
+      </section>
+
       <div className="min-h-screen bg-slate-50">
         {/* Hero Section with SEO-optimized content */}
         <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-600 text-white py-16 px-4">
