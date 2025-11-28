@@ -28,7 +28,7 @@ const AdminPage: React.FC = () => {
   const [recentActivities, setRecentActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const API = "http://localhost:5000";
+  const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const token = localStorage.getItem("token");
   // Redirect if not admin
   if (!isAdmin) {
@@ -40,7 +40,7 @@ const AdminPage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${API}/api/admin/stats`, {
+        const res = await fetch(`${API_BASE}/admin/stats`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token || ""}`,
@@ -244,7 +244,7 @@ const AdminPage: React.FC = () => {
                   </p>
                 </div>
                 <a
-                  href="http://localhost:5000/api-docs"
+                  href={`${API_BASE}/api-docs`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors"

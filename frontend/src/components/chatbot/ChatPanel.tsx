@@ -1,6 +1,6 @@
 import { mockProducts } from "@/data/products";
 import { useProductActions } from "@/hooks/useProductActions";
-import axios from "axios";
+import api from "@/api/axiosConfig";
 import clsx from "clsx";
 import React, { useEffect, useRef, useState } from "react";
 import { IoMdSend } from "react-icons/io";
@@ -64,12 +64,9 @@ const ChatPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setIsTyping(true);
 
     try {
-      const { data } = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/gemma`,
-        {
-          message: input,
-        }
-      );
+      const { data } = await api.post(`/gemma`, {
+        message: input,
+      });
 
       console.log(data.aiReply);
 

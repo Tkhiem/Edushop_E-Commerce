@@ -3,7 +3,7 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import ProductCard from "../components/product/ProductCard";
 import SidebarFilter from "../components/common/SidebarFilter";
 import Skeleton from "../components/ui/Skeleton";
-import axios from "axios";
+import api from "../api/axiosConfig";
 import { useOwnedCourses } from "../hooks/useOwnedCourses";
 import SEO from "../components/SEO";
 
@@ -112,12 +112,9 @@ const HomePage: React.FC = () => {
 
       console.log("🔍 Fetching courses with params:", params);
 
-      // Direct axios call to backend
-      const response = await axios.get("http://localhost:5000/api/courses", {
+      // Use centralized axios instance (reads VITE_API_URL at build time)
+      const response = await api.get("/courses", {
         params,
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
 
       console.log("✅ API Response:", response.data);

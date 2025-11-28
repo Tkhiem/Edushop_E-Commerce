@@ -31,8 +31,7 @@ const Checkout: React.FC<CheckoutProps> = ({
     "paypal"
   );
 
-  const SERVER =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api/orders";
+  // Use axios instance (`/api` base handled by `src/api/axiosConfig.ts`).
 
   useEffect(() => {
     setAmount(initialAmount);
