@@ -325,53 +325,59 @@ const HomePage: React.FC = () => {
                 </ul>
               </div>
             </section>
-      <section className="max-w-5xl mx-auto mt-8 mb-8 px-4">
-        <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col md:flex-row gap-6 items-center">
-          <div className="flex-1">
-            <h2 className="text-3xl font-bold text-blue-700 mb-2 flex items-center gap-2">
-              <span>EduShop</span>
-              <span className="inline-block bg-blue-100 text-blue-700 rounded-full px-3 py-1 text-sm font-semibold">Nền tảng học trực tuyến</span>
-            </h2>
-            <p className="text-gray-700 mb-4">
-              Học mọi lúc, mọi nơi với hàng ngàn khóa học chất lượng cao, giảng viên uy tín, hỗ trợ 24/7 và chứng nhận hoàn thành uy tín.
-            </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3">
-                <span className="text-2xl">📚</span>
-                <span className="font-semibold text-blue-700">Kho kiến thức khổng lồ</span>
-              </div>
-              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3">
-                <span className="text-2xl">🎓</span>
-                <span className="font-semibold text-blue-700">Chứng nhận uy tín</span>
-              </div>
-              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3">
-                <span className="text-2xl">💬</span>
-                <span className="font-semibold text-blue-700">Hỗ trợ trực tuyến</span>
-              </div>
-              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3">
-                <span className="text-2xl">🔄</span>
-                <span className="font-semibold text-blue-700">Nội dung cập nhật</span>
-              </div>
-              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3">
-                <span className="text-2xl">📱</span>
-                <span className="font-semibold text-blue-700">Học trên mọi thiết bị</span>
-              </div>
-            </div>
-          </div>
-          <div className="flex-1">
-            <div className="bg-gray-50 rounded-xl p-4">
-              <h3 className="text-lg font-bold text-blue-600 mb-2 flex items-center gap-2">
-                <span>❓</span> Câu hỏi thường gặp
-              </h3>
-              <ul className="text-gray-700 text-sm space-y-2">
-                <li><span className="font-semibold">EduShop có miễn phí không?</span> Một số khóa học miễn phí, phần lớn là trả phí với giá ưu đãi.</li>
-                <li><span className="font-semibold">Có được cấp chứng chỉ sau khi học không?</span> Có, nhận chứng chỉ điện tử sau khi hoàn thành khóa học.</li>
-                <li><span className="font-semibold">Làm sao để liên hệ hỗ trợ?</span> Chat trực tiếp qua Messenger, Zalo hoặc Live Chat trên website.</li>
+      {/* ...existing code... */}
+      {/* --- ĐẨY TOÀN BỘ SECTION TEXT DÀI VỀ CUỐI TRANG --- */}
+      <div className="w-full bg-transparent flex flex-col items-center justify-center mt-12 mb-8">
+        <div className="max-w-5xl w-full">
+          {/* Cam kết chất lượng */}
+          <section className="mb-8 px-4">
+            <div className="bg-blue-50 rounded-2xl p-6 shadow-sm">
+              <h3 className="text-2xl font-bold text-blue-700 mb-2">Cam kết chất lượng từ EduShop</h3>
+              <p className="text-gray-700 mb-2">EduShop cam kết mang đến cho bạn trải nghiệm học tập tốt nhất với nội dung được kiểm duyệt kỹ lưỡng, giảng viên giàu kinh nghiệm và hỗ trợ tận tâm. Mỗi khóa học đều được cập nhật liên tục, đảm bảo kiến thức luôn mới và phù hợp với thực tiễn.</p>
+              <ul className="list-disc ml-6 text-gray-700">
+                <li>Hoàn tiền 100% nếu không hài lòng trong 7 ngày đầu.</li>
+                <li>Đội ngũ hỗ trợ 24/7 qua chat trực tuyến.</li>
+                <li>Chứng nhận hoàn thành khóa học được công nhận bởi đối tác doanh nghiệp.</li>
               </ul>
             </div>
-          </div>
+          </section>
+          {/* Quy trình học tập */}
+          <section className="mb-8 px-4">
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="text-xl font-bold text-blue-700 mb-2">Quy trình học tập tại EduShop</h3>
+              <ol className="list-decimal ml-6 text-gray-700">
+                <li>Đăng ký tài khoản miễn phí, xác thực email.</li>
+                <li>Chọn khóa học phù hợp, thanh toán online an toàn.</li>
+                <li>Truy cập nội dung học tập mọi lúc, mọi nơi trên mọi thiết bị.</li>
+                <li>Tham gia thảo luận, hỏi đáp với giảng viên và cộng đồng.</li>
+                <li>Hoàn thành bài kiểm tra, nhận chứng chỉ điện tử.</li>
+              </ol>
+            </div>
+          </section>
+          {/* Review học viên */}
+          <section className="mb-8 px-4">
+            <div className="bg-gray-50 rounded-2xl p-6 shadow-sm">
+              <h3 className="text-xl font-bold text-blue-700 mb-2">Cảm nhận của học viên</h3>
+              <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700 mb-2">“EduShop giúp tôi nâng cao kỹ năng lập trình và có việc làm tốt hơn. Giảng viên hỗ trợ rất nhiệt tình!” – <span className="font-semibold">Nguyễn Văn A</span></blockquote>
+              <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700 mb-2">“Nội dung khóa học cập nhật liên tục, dễ hiểu, thực tế. Tôi rất hài lòng!” – <span className="font-semibold">Trần Thị B</span></blockquote>
+              <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700">“Hỗ trợ chat trực tuyến cực kỳ nhanh, giải đáp mọi thắc mắc.” – <span className="font-semibold">Lê Văn C</span></blockquote>
+            </div>
+          </section>
+          {/* Hướng dẫn đăng ký và học */}
+          <section className="mb-8 px-4">
+            <div className="bg-white rounded-2xl p-6 shadow-sm">
+              <h3 className="text-xl font-bold text-blue-700 mb-2">Hướng dẫn đăng ký và bắt đầu học</h3>
+              <p className="text-gray-700 mb-2">Chỉ với vài bước đơn giản, bạn đã có thể bắt đầu hành trình học tập cùng EduShop:</p>
+              <ul className="list-disc ml-6 text-gray-700">
+                <li>Truy cập <a href="/register" className="text-blue-600 underline">Đăng ký</a> và tạo tài khoản miễn phí.</li>
+                <li>Chọn khóa học yêu thích, thanh toán qua VnPay, Paypal hoặc thẻ quốc tế.</li>
+                <li>Bắt đầu học ngay trên website hoặc ứng dụng di động.</li>
+                <li>Liên hệ hỗ trợ bất cứ lúc nào qua Messenger, Zalo, hoặc Live Chat.</li>
+              </ul>
+            </div>
+          </section>
         </div>
-      </section>
+      </div>
 
       <div className="min-h-screen bg-slate-50">
         {/* Hero Section with SEO-optimized content */}
