@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Facebook, Twitter, Link as LinkIcon, Share2, Check } from 'lucide-react';
 
 interface ShareButtonProps {
@@ -15,6 +15,23 @@ interface ShareButtonProps {
 const ShareButton: React.FC<ShareButtonProps> = ({ url, title, description }) => {
   const [showMenu, setShowMenu] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [menuPosition, setMenuPosition] = useState<'left' | 'right'>('right');
+  const buttonRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (showMenu && buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      const windowWidth = window.innerWidth;
+      const menuWidth = 224; // w-56 = 14rem = 224px
+      
+      // Nếu menu sẽ bị cắt ở bên phải, hiển thị bên trái
+      if (rect.right + menuWidth > windowWidth - 16) { // 16px padding
+        setMenuPosition('left');
+      } else {
+        setMenuPosition('right');
+      }
+    }
+  }, [showMenu]);
 
   const shareUrl = encodeURIComponent(url);
   const shareTitle = encodeURIComponent(title);
@@ -48,7 +65,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({ url, title, description }) =>
   };
 
   return (
-    <div className="relative inline-block">
+    <div ref={buttonRef} className="relative inline-block">
       {/* Share Button */}
       <button
         onClick={() => setShowMenu(!showMenu)}
@@ -68,10 +85,9 @@ const ShareButton: React.FC<ShareButtonProps> = ({ url, title, description }) =>
             onClick={() => setShowMenu(false)}
           />
           
-          {/* Menu - Fixed positioning to avoid being cut off */}
-          <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-[999] overflow-hidden
-                        transform -translate-x-0 sm:translate-x-0
-                        max-w-[calc(100vw-1rem)] sm:max-w-none">
+          {/* Menu - Smart positioning */}
+          <div className={`absolute top-full mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-[999] overflow-hidden
+                          ${menuPosition === 'left' ? 'right-0' : 'left-0'}`}>
             {/* Facebook */}
             <button
               onClick={handleFacebookShare}

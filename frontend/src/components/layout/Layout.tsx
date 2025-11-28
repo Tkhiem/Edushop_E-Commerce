@@ -52,14 +52,20 @@ const Layout: React.FC = () => {
       {/* Facebook Messenger - Chat qua Messenger (0.5đ) */}
       {ENABLE_MESSENGER && <MessengerChat pageId={FB_PAGE_ID} />}
       
-      {/* Fallback Simple Chat Button nếu Messenger không load */}
-      <div className="fixed bottom-4 right-20 z-50">
+      {/* Fallback Messenger Button - đặt trên Crisp chat */}
+      <div className="fixed bottom-20 right-4 z-50">
         <button
           onClick={() => window.open('https://m.me/61578469015979', '_blank')}
-          className="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-full shadow-lg transition-colors"
+          className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white p-4 rounded-full shadow-lg transition-all duration-300 hover:scale-105 group"
           title="Chat với chúng tôi qua Messenger"
         >
-          💬
+          <svg 
+            className="w-6 h-6 transition-transform group-hover:scale-110" 
+            fill="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 0C5.373 0 0 4.975 0 11.111c0 3.497 1.745 6.616 4.472 8.652V24l4.086-2.242c1.09.301 2.246.464 3.442.464 6.627 0 12-4.974 12-11.111C24 4.975 18.627 0 12 0zm1.191 14.963l-3.055-3.26-5.963 3.26L10.732 8.1l3.13 3.26L19.764 8.1l-6.573 6.863z"/>
+          </svg>
         </button>
       </div>
     </div>
