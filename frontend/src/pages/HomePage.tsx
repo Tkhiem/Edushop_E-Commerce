@@ -275,28 +275,52 @@ const HomePage: React.FC = () => {
       />
 
       {/* Đoạn text SEO: mô tả, FAQ, lợi ích */}
-      <section style={{margin: '32px 0', padding: '24px', background: '#f8f8fc', borderRadius: '12px'}}>
-        <h2>EduShop - Nền tảng khóa học trực tuyến hàng đầu Việt Nam</h2>
-        <p>
-          EduShop cung cấp hàng ngàn khóa học chất lượng cao về lập trình, thiết kế, marketing, kinh doanh, ngoại ngữ và nhiều lĩnh vực khác. Bạn có thể học mọi lúc, mọi nơi với đội ngũ giảng viên uy tín, nội dung cập nhật liên tục và hỗ trợ 24/7.
-        </p>
-        <h3>Những lợi ích khi học tại EduShop</h3>
-        <ul>
-          <li>Truy cập kho kiến thức khổng lồ với chi phí hợp lý</li>
-          <li>Chứng nhận hoàn thành khóa học uy tín</li>
-          <li>Hỗ trợ trực tuyến qua Messenger, Zalo, và Live Chat</li>
-          <li>Cập nhật nội dung mới liên tục</li>
-          <li>Học tập linh hoạt trên mọi thiết bị</li>
-        </ul>
-        <h3>Câu hỏi thường gặp (FAQ)</h3>
-        <dl>
-          <dt>EduShop có miễn phí không?</dt>
-          <dd>Một số khóa học miễn phí, phần lớn là trả phí với giá ưu đãi.</dd>
-          <dt>Tôi có được cấp chứng chỉ sau khi học không?</dt>
-          <dd>Có, bạn sẽ nhận chứng chỉ điện tử sau khi hoàn thành khóa học.</dd>
-          <dt>Làm sao để liên hệ hỗ trợ?</dt>
-          <dd>Bạn có thể chat trực tiếp qua Messenger, Zalo hoặc Live Chat trên website.</dd>
-        </dl>
+      <section className="max-w-5xl mx-auto mt-8 mb-8 px-4">
+        <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col md:flex-row gap-6 items-center">
+          <div className="flex-1">
+            <h2 className="text-3xl font-bold text-blue-700 mb-2 flex items-center gap-2">
+              <span>EduShop</span>
+              <span className="inline-block bg-blue-100 text-blue-700 rounded-full px-3 py-1 text-sm font-semibold">Nền tảng học trực tuyến</span>
+            </h2>
+            <p className="text-gray-700 mb-4">
+              Học mọi lúc, mọi nơi với hàng ngàn khóa học chất lượng cao, giảng viên uy tín, hỗ trợ 24/7 và chứng nhận hoàn thành uy tín.
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3">
+                <span className="text-2xl">📚</span>
+                <span className="font-semibold text-blue-700">Kho kiến thức khổng lồ</span>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3">
+                <span className="text-2xl">🎓</span>
+                <span className="font-semibold text-blue-700">Chứng nhận uy tín</span>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3">
+                <span className="text-2xl">💬</span>
+                <span className="font-semibold text-blue-700">Hỗ trợ trực tuyến</span>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3">
+                <span className="text-2xl">🔄</span>
+                <span className="font-semibold text-blue-700">Nội dung cập nhật</span>
+              </div>
+              <div className="bg-blue-50 rounded-xl p-3 flex items-center gap-3">
+                <span className="text-2xl">📱</span>
+                <span className="font-semibold text-blue-700">Học trên mọi thiết bị</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex-1">
+            <div className="bg-gray-50 rounded-xl p-4">
+              <h3 className="text-lg font-bold text-blue-600 mb-2 flex items-center gap-2">
+                <span>❓</span> Câu hỏi thường gặp
+              </h3>
+              <ul className="text-gray-700 text-sm space-y-2">
+                <li><span className="font-semibold">EduShop có miễn phí không?</span> Một số khóa học miễn phí, phần lớn là trả phí với giá ưu đãi.</li>
+                <li><span className="font-semibold">Có được cấp chứng chỉ sau khi học không?</span> Có, nhận chứng chỉ điện tử sau khi hoàn thành khóa học.</li>
+                <li><span className="font-semibold">Làm sao để liên hệ hỗ trợ?</span> Chat trực tiếp qua Messenger, Zalo hoặc Live Chat trên website.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
 
       <div className="min-h-screen bg-slate-50">

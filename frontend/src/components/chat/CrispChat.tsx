@@ -124,7 +124,7 @@ const CrispChat = () => {
             height: 28px !important;
           }
           .crisp-client .cc-tlyw {
-            bottom: 16px !important;
+            bottom: 80px !important; /* Tăng khoảng cách với Messenger */
             right: 16px !important;
           }
         `;
