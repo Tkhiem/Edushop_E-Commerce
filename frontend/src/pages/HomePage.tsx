@@ -275,6 +275,56 @@ const HomePage: React.FC = () => {
       />
 
       {/* Đoạn text SEO: mô tả, FAQ, lợi ích */}
+            {/* Section: Cam kết chất lượng */}
+            <section className="max-w-5xl mx-auto mb-8 px-4">
+              <div className="bg-blue-50 rounded-2xl p-6 shadow-sm">
+                <h3 className="text-2xl font-bold text-blue-700 mb-2">Cam kết chất lượng từ EduShop</h3>
+                <p className="text-gray-700 mb-2">EduShop cam kết mang đến cho bạn trải nghiệm học tập tốt nhất với nội dung được kiểm duyệt kỹ lưỡng, giảng viên giàu kinh nghiệm và hỗ trợ tận tâm. Mỗi khóa học đều được cập nhật liên tục, đảm bảo kiến thức luôn mới và phù hợp với thực tiễn.</p>
+                <ul className="list-disc ml-6 text-gray-700">
+                  <li>Hoàn tiền 100% nếu không hài lòng trong 7 ngày đầu.</li>
+                  <li>Đội ngũ hỗ trợ 24/7 qua chat trực tuyến.</li>
+                  <li>Chứng nhận hoàn thành khóa học được công nhận bởi đối tác doanh nghiệp.</li>
+                </ul>
+              </div>
+            </section>
+
+            {/* Section: Quy trình học tập */}
+            <section className="max-w-5xl mx-auto mb-8 px-4">
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <h3 className="text-xl font-bold text-blue-700 mb-2">Quy trình học tập tại EduShop</h3>
+                <ol className="list-decimal ml-6 text-gray-700">
+                  <li>Đăng ký tài khoản miễn phí, xác thực email.</li>
+                  <li>Chọn khóa học phù hợp, thanh toán online an toàn.</li>
+                  <li>Truy cập nội dung học tập mọi lúc, mọi nơi trên mọi thiết bị.</li>
+                  <li>Tham gia thảo luận, hỏi đáp với giảng viên và cộng đồng.</li>
+                  <li>Hoàn thành bài kiểm tra, nhận chứng chỉ điện tử.</li>
+                </ol>
+              </div>
+            </section>
+
+            {/* Section: Review học viên */}
+            <section className="max-w-5xl mx-auto mb-8 px-4">
+              <div className="bg-gray-50 rounded-2xl p-6 shadow-sm">
+                <h3 className="text-xl font-bold text-blue-700 mb-2">Cảm nhận của học viên</h3>
+                <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700 mb-2">“EduShop giúp tôi nâng cao kỹ năng lập trình và có việc làm tốt hơn. Giảng viên hỗ trợ rất nhiệt tình!” – <span className="font-semibold">Nguyễn Văn A</span></blockquote>
+                <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700 mb-2">“Nội dung khóa học cập nhật liên tục, dễ hiểu, thực tế. Tôi rất hài lòng!” – <span className="font-semibold">Trần Thị B</span></blockquote>
+                <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700">“Hỗ trợ chat trực tuyến cực kỳ nhanh, giải đáp mọi thắc mắc.” – <span className="font-semibold">Lê Văn C</span></blockquote>
+              </div>
+            </section>
+
+            {/* Section: Hướng dẫn đăng ký và học */}
+            <section className="max-w-5xl mx-auto mb-8 px-4">
+              <div className="bg-white rounded-2xl p-6 shadow-sm">
+                <h3 className="text-xl font-bold text-blue-700 mb-2">Hướng dẫn đăng ký và bắt đầu học</h3>
+                <p className="text-gray-700 mb-2">Chỉ với vài bước đơn giản, bạn đã có thể bắt đầu hành trình học tập cùng EduShop:</p>
+                <ul className="list-disc ml-6 text-gray-700">
+                  <li>Truy cập <a href="/register" className="text-blue-600 underline">Đăng ký</a> và tạo tài khoản miễn phí.</li>
+                  <li>Chọn khóa học yêu thích, thanh toán qua VnPay, Paypal hoặc thẻ quốc tế.</li>
+                  <li>Bắt đầu học ngay trên website hoặc ứng dụng di động.</li>
+                  <li>Liên hệ hỗ trợ bất cứ lúc nào qua Messenger, Zalo, hoặc Live Chat.</li>
+                </ul>
+              </div>
+            </section>
       <section className="max-w-5xl mx-auto mt-8 mb-8 px-4">
         <div className="bg-white rounded-2xl shadow-md p-6 flex flex-col md:flex-row gap-6 items-center">
           <div className="flex-1">
