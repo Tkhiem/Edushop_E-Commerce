@@ -68,8 +68,8 @@ const ShareButton: React.FC<ShareButtonProps> = ({ url, title, description }) =>
             onClick={() => setShowMenu(false)}
           />
           
-          {/* Menu */}
-          <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden">
+          {/* Menu - Auto position left or right based on screen space */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-56 bg-white rounded-lg shadow-xl border border-gray-200 z-50 overflow-hidden sm:left-auto sm:right-0 sm:transform-none">
             {/* Facebook */}
             <button
               onClick={handleFacebookShare}

@@ -42,12 +42,17 @@ const MessengerChat = ({ pageId }: { pageId: string }) => {
   useEffect(() => {
     console.log('[Messenger] 🚀 Initializing with Page ID:', pageId);
     console.log('[Messenger] 📌 Verify page exists: https://www.facebook.com/' + pageId);
+    console.log('[Messenger] 🌐 Current URL:', window.location.href);
+    console.log('[Messenger] 📍 Environment:', import.meta.env.MODE);
 
     // Kiểm tra nếu đã có SDK rồi thì chỉ parse lại
     if (window.FB) {
       console.log('[Messenger] ♻️ SDK already exists, re-parsing...');
       if (window.FB.XFBML) {
         window.FB.XFBML.parse();
+      }
+      return;
+    }
       }
       return;
     }
@@ -164,6 +169,11 @@ const MessengerChat = ({ pageId }: { pageId: string }) => {
 
   return (
     <>
+      {/* Debug indicator - remove in production */}
+      <div className="fixed bottom-4 left-4 bg-blue-600 text-white px-3 py-1 rounded text-xs z-40">
+        FB Chat Loading... (Page: {pageId.slice(-4)})
+      </div>
+
       {/* Facebook Messenger Customer Chat Widget 
           Docs: https://developers.facebook.com/docs/messenger-platform/discovery/customer-chat-plugin
       */}

@@ -29,7 +29,8 @@ const Layout: React.FC = () => {
   const FB_PAGE_ID = "61578469015979"; // 👈 Thay số này bằng Page ID của bạn
   
   // Tự động bật Messenger khi deploy production, tắt trên localhost
-  const ENABLE_MESSENGER = import.meta.env.PROD; // true khi production, false khi development
+  // Tạm thời bật để test - có thể thay đổi về import.meta.env.PROD sau
+  const ENABLE_MESSENGER = true; // import.meta.env.PROD;
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
