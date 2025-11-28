@@ -111,6 +111,24 @@ const CrispChat = () => {
     const showTimeout = setTimeout(() => {
       if (window.$crisp) {
         window.$crisp.push(['do', 'chat:show']);
+        
+        // Custom CSS để điều chỉnh kích thước Crisp button cho đều với Messenger
+        const style = document.createElement('style');
+        style.textContent = `
+          .crisp-client .cc-tlyw .cc-kxkl {
+            width: 56px !important;
+            height: 56px !important;
+          }
+          .crisp-client .cc-tlyw .cc-kxkl .cc-1hqb {
+            width: 28px !important;
+            height: 28px !important;
+          }
+          .crisp-client .cc-tlyw {
+            bottom: 16px !important;
+            right: 16px !important;
+          }
+        `;
+        document.head.appendChild(style);
       }
     }, 500);
 
