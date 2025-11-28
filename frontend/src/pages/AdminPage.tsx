@@ -59,7 +59,7 @@ const AdminPage: React.FC = () => {
     if (activeTab === "dashboard") {
       fetchDashboard();
     }
-  }, [activeTab, API, token]);
+  }, [activeTab, API_BASE, token]);
 
   const menuItems = [
     {
