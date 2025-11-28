@@ -53,9 +53,6 @@ const MessengerChat = ({ pageId }: { pageId: string }) => {
       }
       return;
     }
-      }
-      return;
-    }
 
     // Xóa các phần tử cũ nếu có
     const existingScript = document.getElementById('facebook-jssdk');
