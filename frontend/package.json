@@ -9,6 +9,12 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "overrides": {
+    "react-helmet-async": {
+      "react": "^19.1.0",
+      "react-dom": "^19.1.0"
+    }
+  },
   "dependencies": {
     "@paypal/react-paypal-js": "^8.9.2",
     "@tailwindcss/line-clamp": "^0.4.4",
