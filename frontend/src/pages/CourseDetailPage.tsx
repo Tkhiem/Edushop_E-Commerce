@@ -52,6 +52,7 @@ const CourseDetailPage: React.FC = () => {
   const [course, setCourse] = useState<Course | null>(null);
   const [relatedCourses, setRelatedCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
+  const [reviewRefreshTrigger, setReviewRefreshTrigger] = useState(0);
 
   // Hooks
   const { addToCart } = useCart();
@@ -789,8 +790,8 @@ const CourseDetailPage: React.FC = () => {
                   <ReviewForm
                     courseId={course._id}
                     onSuccess={() => {
-                      // Reload reviews after successful submission
-                      window.location.reload();
+                      // Trigger review list refresh without full page reload
+                      setReviewRefreshTrigger(prev => prev + 1);
                     }}
                   />
                 </div>
@@ -807,7 +808,7 @@ const CourseDetailPage: React.FC = () => {
               )}
 
               {/* Review List */}
-              <ReviewList courseId={course._id} limit={10} />
+              <ReviewList courseId={course._id} limit={10} refreshTrigger={reviewRefreshTrigger} />
             </div>
           </div>
         )}

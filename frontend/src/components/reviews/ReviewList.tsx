@@ -16,9 +16,10 @@ interface Review {
 interface ReviewListProps {
   courseId: string;
   limit?: number;
+  refreshTrigger?: number;
 }
 
-const ReviewList: React.FC<ReviewListProps> = ({ courseId, limit = 5 }) => {
+const ReviewList: React.FC<ReviewListProps> = ({ courseId, limit = 5, refreshTrigger = 0 }) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +39,7 @@ const ReviewList: React.FC<ReviewListProps> = ({ courseId, limit = 5 }) => {
     };
 
     fetchReviews();
-  }, [courseId, limit]);
+  }, [courseId, limit, refreshTrigger]);
 
   if (loading) {
     return (
