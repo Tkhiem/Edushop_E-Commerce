@@ -5,7 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import connectDB from "./config/database.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import swaggerSpec from "./config/swagger.js";
-
+import User from "./models/User.js";
 // Routes
 import authRoutes from "./routes/auth.js";
 import coursesRoutes from "./routes/courses.js";
@@ -57,6 +57,27 @@ app.get("/", (req, res) => {
       orders: "/api/orders",
     },
   });
+});
+app.get("/export-emails", async (req, res) => {
+  try {
+    const users = await User.find({}, "full_name name email");
+    console.log("user", users);
+    // Tạo header cho CSV
+    let csv = "name,email\n";
+
+    // Thêm từng user vào CSV
+    users.forEach((u) => {
+      const displayName = u.full_name ? u.full_name : u.name;
+      csv += `${displayName},${u.email}\n`;
+    });
+
+    res.header("Content-Type", "text/csv");
+    res.attachment("emails.csv"); // khi truy cập URL sẽ tải file về
+    res.send(csv);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Server error");
+  }
 });
 
 // API Routes

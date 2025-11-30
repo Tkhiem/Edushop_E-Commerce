@@ -3,10 +3,10 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import ProductCard from "../components/product/ProductCard";
 import SidebarFilter from "../components/common/SidebarFilter";
 import Skeleton from "../components/ui/Skeleton";
-import api from "../api/axiosConfig";
+import axios from "axios";
 import { useOwnedCourses } from "../hooks/useOwnedCourses";
 import SEO from "../components/SEO";
-
+import MailchimpForm from "../components/mailchimp/MailchimpForm";
 // Define Course interface
 interface Course {
   _id: string;
@@ -63,18 +63,25 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     console.log("🔄 HomePage mounted or filters changed");
     loadCourses();
-  }, [selectedCategories, selectedLevels, priceRange, sortBy, currentPage, searchQuery]);
+  }, [
+    selectedCategories,
+    selectedLevels,
+    priceRange,
+    sortBy,
+    currentPage,
+    searchQuery,
+  ]);
 
   // Handle URL params for category and search
   useEffect(() => {
     const categoryParam = searchParams.get("category");
     const searchParam = searchParams.get("search");
-    
+
     if (categoryParam) {
       console.log("🔗 Category from URL:", categoryParam);
       setSelectedCategories([categoryParam]);
     }
-    
+
     if (searchParam) {
       console.log("🔍 Search from URL:", searchParam);
       setSearchQuery(searchParam);
@@ -112,9 +119,12 @@ const HomePage: React.FC = () => {
 
       console.log("🔍 Fetching courses with params:", params);
 
-      // Use centralized axios instance (reads VITE_API_URL at build time)
-      const response = await api.get("/courses", {
+      // Direct axios call to backend
+      const response = await axios.get("http://localhost:5000/api/courses", {
         params,
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
       console.log("✅ API Response:", response.data);
@@ -253,15 +263,16 @@ const HomePage: React.FC = () => {
   console.log("✅ Rendering main content with", courses.length, "courses");
 
   // SEO Content - Đáp ứng yêu cầu 1 điểm: Trang viết SEO content
-  const seoTitle = searchQuery 
-    ? `Tìm kiếm: ${searchQuery}` 
-    : selectedCategories.length > 0 
-      ? `Khóa học ${selectedCategories.join(', ')}`
-      : "Khóa học trực tuyến chất lượng cao";
-  
+  const seoTitle = searchQuery
+    ? `Tìm kiếm: ${searchQuery}`
+    : selectedCategories.length > 0
+    ? `Khóa học ${selectedCategories.join(", ")}`
+    : "Khóa học trực tuyến chất lượng cao";
+
   const seoDescription = `Khám phá ${totalCourses.toLocaleString()}+ khóa học trực tuyến chất lượng cao tại EduShop. Học từ các chuyên gia hàng đầu với giá ưu đãi. Lập trình, Kinh doanh, Thiết kế, Marketing và nhiều hơn nữa. Chứng chỉ được công nhận quốc tế.`;
-  
-  const seoKeywords = "khóa học online, học trực tuyến, edushop, lập trình, kinh doanh, thiết kế, marketing, data science, tiếng anh, kỹ năng mềm, chứng chỉ quốc tế, udemy vietnam";
+
+  const seoKeywords =
+    "khóa học online, học trực tuyến, edushop, lập trình, kinh doanh, thiết kế, marketing, data science, tiếng anh, kỹ năng mềm, chứng chỉ quốc tế, udemy vietnam";
 
   // Main Content
   return (
@@ -274,111 +285,6 @@ const HomePage: React.FC = () => {
         type="website"
       />
 
-      {/* Đoạn text SEO: mô tả, FAQ, lợi ích */}
-            {/* Section: Cam kết chất lượng */}
-            <section className="max-w-5xl mx-auto mb-8 px-4">
-              <div className="bg-blue-50 rounded-2xl p-6 shadow-sm">
-                <h3 className="text-2xl font-bold text-blue-700 mb-2">Cam kết chất lượng từ EduShop</h3>
-                <p className="text-gray-700 mb-2">EduShop cam kết mang đến cho bạn trải nghiệm học tập tốt nhất với nội dung được kiểm duyệt kỹ lưỡng, giảng viên giàu kinh nghiệm và hỗ trợ tận tâm. Mỗi khóa học đều được cập nhật liên tục, đảm bảo kiến thức luôn mới và phù hợp với thực tiễn.</p>
-                <ul className="list-disc ml-6 text-gray-700">
-                  <li>Hoàn tiền 100% nếu không hài lòng trong 7 ngày đầu.</li>
-                  <li>Đội ngũ hỗ trợ 24/7 qua chat trực tuyến.</li>
-                  <li>Chứng nhận hoàn thành khóa học được công nhận bởi đối tác doanh nghiệp.</li>
-                </ul>
-              </div>
-            </section>
-
-            {/* Section: Quy trình học tập */}
-            <section className="max-w-5xl mx-auto mb-8 px-4">
-              <div className="bg-white rounded-2xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-blue-700 mb-2">Quy trình học tập tại EduShop</h3>
-                <ol className="list-decimal ml-6 text-gray-700">
-                  <li>Đăng ký tài khoản miễn phí, xác thực email.</li>
-                  <li>Chọn khóa học phù hợp, thanh toán online an toàn.</li>
-                  <li>Truy cập nội dung học tập mọi lúc, mọi nơi trên mọi thiết bị.</li>
-                  <li>Tham gia thảo luận, hỏi đáp với giảng viên và cộng đồng.</li>
-                  <li>Hoàn thành bài kiểm tra, nhận chứng chỉ điện tử.</li>
-                </ol>
-              </div>
-            </section>
-
-            {/* Section: Review học viên */}
-            <section className="max-w-5xl mx-auto mb-8 px-4">
-              <div className="bg-gray-50 rounded-2xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-blue-700 mb-2">Cảm nhận của học viên</h3>
-                <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700 mb-2">“EduShop giúp tôi nâng cao kỹ năng lập trình và có việc làm tốt hơn. Giảng viên hỗ trợ rất nhiệt tình!” – <span className="font-semibold">Nguyễn Văn A</span></blockquote>
-                <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700 mb-2">“Nội dung khóa học cập nhật liên tục, dễ hiểu, thực tế. Tôi rất hài lòng!” – <span className="font-semibold">Trần Thị B</span></blockquote>
-                <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700">“Hỗ trợ chat trực tuyến cực kỳ nhanh, giải đáp mọi thắc mắc.” – <span className="font-semibold">Lê Văn C</span></blockquote>
-              </div>
-            </section>
-
-            {/* Section: Hướng dẫn đăng ký và học */}
-            <section className="max-w-5xl mx-auto mb-8 px-4">
-              <div className="bg-white rounded-2xl p-6 shadow-sm">
-                <h3 className="text-xl font-bold text-blue-700 mb-2">Hướng dẫn đăng ký và bắt đầu học</h3>
-                <p className="text-gray-700 mb-2">Chỉ với vài bước đơn giản, bạn đã có thể bắt đầu hành trình học tập cùng EduShop:</p>
-                <ul className="list-disc ml-6 text-gray-700">
-                  <li>Truy cập <a href="/register" className="text-blue-600 underline">Đăng ký</a> và tạo tài khoản miễn phí.</li>
-                  <li>Chọn khóa học yêu thích, thanh toán qua VnPay, Paypal hoặc thẻ quốc tế.</li>
-                  <li>Bắt đầu học ngay trên website hoặc ứng dụng di động.</li>
-                  <li>Liên hệ hỗ trợ bất cứ lúc nào qua Messenger, Zalo, hoặc Live Chat.</li>
-                </ul>
-              </div>
-            </section>
-      {/* ...existing code... */}
-      {/* --- ĐẨY TOÀN BỘ SECTION TEXT DÀI VỀ CUỐI TRANG --- */}
-      <div className="w-full bg-transparent flex flex-col items-center justify-center mt-12 mb-8">
-        <div className="max-w-5xl w-full">
-          {/* Cam kết chất lượng */}
-          <section className="mb-8 px-4">
-            <div className="bg-blue-50 rounded-2xl p-6 shadow-sm">
-              <h3 className="text-2xl font-bold text-blue-700 mb-2">Cam kết chất lượng từ EduShop</h3>
-              <p className="text-gray-700 mb-2">EduShop cam kết mang đến cho bạn trải nghiệm học tập tốt nhất với nội dung được kiểm duyệt kỹ lưỡng, giảng viên giàu kinh nghiệm và hỗ trợ tận tâm. Mỗi khóa học đều được cập nhật liên tục, đảm bảo kiến thức luôn mới và phù hợp với thực tiễn.</p>
-              <ul className="list-disc ml-6 text-gray-700">
-                <li>Hoàn tiền 100% nếu không hài lòng trong 7 ngày đầu.</li>
-                <li>Đội ngũ hỗ trợ 24/7 qua chat trực tuyến.</li>
-                <li>Chứng nhận hoàn thành khóa học được công nhận bởi đối tác doanh nghiệp.</li>
-              </ul>
-            </div>
-          </section>
-          {/* Quy trình học tập */}
-          <section className="mb-8 px-4">
-            <div className="bg-white rounded-2xl p-6 shadow-sm">
-              <h3 className="text-xl font-bold text-blue-700 mb-2">Quy trình học tập tại EduShop</h3>
-              <ol className="list-decimal ml-6 text-gray-700">
-                <li>Đăng ký tài khoản miễn phí, xác thực email.</li>
-                <li>Chọn khóa học phù hợp, thanh toán online an toàn.</li>
-                <li>Truy cập nội dung học tập mọi lúc, mọi nơi trên mọi thiết bị.</li>
-                <li>Tham gia thảo luận, hỏi đáp với giảng viên và cộng đồng.</li>
-                <li>Hoàn thành bài kiểm tra, nhận chứng chỉ điện tử.</li>
-              </ol>
-            </div>
-          </section>
-          {/* Review học viên */}
-          <section className="mb-8 px-4">
-            <div className="bg-gray-50 rounded-2xl p-6 shadow-sm">
-              <h3 className="text-xl font-bold text-blue-700 mb-2">Cảm nhận của học viên</h3>
-              <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700 mb-2">“EduShop giúp tôi nâng cao kỹ năng lập trình và có việc làm tốt hơn. Giảng viên hỗ trợ rất nhiệt tình!” – <span className="font-semibold">Nguyễn Văn A</span></blockquote>
-              <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700 mb-2">“Nội dung khóa học cập nhật liên tục, dễ hiểu, thực tế. Tôi rất hài lòng!” – <span className="font-semibold">Trần Thị B</span></blockquote>
-              <blockquote className="border-l-4 border-blue-400 pl-4 italic text-gray-700">“Hỗ trợ chat trực tuyến cực kỳ nhanh, giải đáp mọi thắc mắc.” – <span className="font-semibold">Lê Văn C</span></blockquote>
-            </div>
-          </section>
-          {/* Hướng dẫn đăng ký và học */}
-          <section className="mb-8 px-4">
-            <div className="bg-white rounded-2xl p-6 shadow-sm">
-              <h3 className="text-xl font-bold text-blue-700 mb-2">Hướng dẫn đăng ký và bắt đầu học</h3>
-              <p className="text-gray-700 mb-2">Chỉ với vài bước đơn giản, bạn đã có thể bắt đầu hành trình học tập cùng EduShop:</p>
-              <ul className="list-disc ml-6 text-gray-700">
-                <li>Truy cập <a href="/register" className="text-blue-600 underline">Đăng ký</a> và tạo tài khoản miễn phí.</li>
-                <li>Chọn khóa học yêu thích, thanh toán qua VnPay, Paypal hoặc thẻ quốc tế.</li>
-                <li>Bắt đầu học ngay trên website hoặc ứng dụng di động.</li>
-                <li>Liên hệ hỗ trợ bất cứ lúc nào qua Messenger, Zalo, hoặc Live Chat.</li>
-              </ul>
-            </div>
-          </section>
-        </div>
-      </div>
-
       <div className="min-h-screen bg-slate-50">
         {/* Hero Section with SEO-optimized content */}
         <div className="bg-gradient-to-r from-blue-700 via-blue-600 to-indigo-600 text-white py-16 px-4">
@@ -390,208 +296,211 @@ const HomePage: React.FC = () => {
               Hơn {totalCourses.toLocaleString()}+ khóa học chất lượng
             </p>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-              <div className="text-3xl mb-2">📚</div>
-              <div className="text-2xl font-bold">
-                {totalCourses.toLocaleString()}+
+            {/* Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+              <div className="bg-white/10 backdrop-blur rounded-xl p-4">
+                <div className="text-3xl mb-2">📚</div>
+                <div className="text-2xl font-bold">
+                  {totalCourses.toLocaleString()}+
+                </div>
+                <div className="text-sm text-blue-100">Khóa học</div>
               </div>
-              <div className="text-sm text-blue-100">Khóa học</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-              <div className="text-3xl mb-2">👨‍🏫</div>
-              <div className="text-2xl font-bold">100+</div>
-              <div className="text-sm text-blue-100">Giảng viên</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-              <div className="text-3xl mb-2">⭐</div>
-              <div className="text-2xl font-bold">4.5+</div>
-              <div className="text-sm text-blue-100">Đánh giá</div>
-            </div>
-            <div className="bg-white/10 backdrop-blur rounded-xl p-4">
-              <div className="text-3xl mb-2">🎓</div>
-              <div className="text-2xl font-bold">50,000+</div>
-              <div className="text-sm text-blue-100">Học viên</div>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-4">
+                <div className="text-3xl mb-2">👨‍🏫</div>
+                <div className="text-2xl font-bold">100+</div>
+                <div className="text-sm text-blue-100">Giảng viên</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-4">
+                <div className="text-3xl mb-2">⭐</div>
+                <div className="text-2xl font-bold">4.5+</div>
+                <div className="text-sm text-blue-100">Đánh giá</div>
+              </div>
+              <div className="bg-white/10 backdrop-blur rounded-xl p-4">
+                <div className="text-3xl mb-2">🎓</div>
+                <div className="text-2xl font-bold">50,000+</div>
+                <div className="text-sm text-blue-100">Học viên</div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
         {/* Main Content */}
         <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex gap-8">
-          {/* Sidebar */}
-          <aside className="hidden lg:block w-80">
-            <div className="sticky top-4">
-              <SidebarFilter
-                selectedCategories={selectedCategories}
-                onCategoryChange={setSelectedCategories}
-                selectedLevels={selectedLevels}
-                onLevelChange={setSelectedLevels}
-                priceRange={priceRange}
-                onPriceRangeChange={setPriceRange}
-                onClearFilters={handleClearFilters}
-              />
-            </div>
-          </aside>
+          <div className="flex gap-8">
+            {/* Sidebar */}
+            <aside className="hidden lg:block w-80">
+              <div className="sticky top-4">
+                <SidebarFilter
+                  selectedCategories={selectedCategories}
+                  onCategoryChange={setSelectedCategories}
+                  selectedLevels={selectedLevels}
+                  onLevelChange={setSelectedLevels}
+                  priceRange={priceRange}
+                  onPriceRangeChange={setPriceRange}
+                  onClearFilters={handleClearFilters}
+                />
+              </div>
+            </aside>
 
-          {/* Main Content */}
-          <main className="flex-1">
-            {/* Search Result Header */}
-            {searchQuery && (
-              <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-blue-900">
-                      Kết quả tìm kiếm cho: "{searchQuery}"
-                    </h3>
-                    <p className="text-sm text-blue-700 mt-1">
-                      Tìm thấy {totalCourses} khóa học
-                    </p>
+            {/* Main Content */}
+            <main className="flex-1">
+              {/* Search Result Header */}
+              {searchQuery && (
+                <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-semibold text-blue-900">
+                        Kết quả tìm kiếm cho: "{searchQuery}"
+                      </h3>
+                      <p className="text-sm text-blue-700 mt-1">
+                        Tìm thấy {totalCourses} khóa học
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        setSearchQuery("");
+                        window.history.pushState({}, "", "/");
+                      }}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    >
+                      ✕ Xóa tìm kiếm
+                    </button>
                   </div>
+                </div>
+              )}
+
+              {/* Header */}
+              <div className="flex justify-between items-center mb-6">
+                <div>
+                  <h2 className="text-2xl font-bold">
+                    {searchQuery ? "Kết quả tìm kiếm" : "Khóa học phổ biến"}
+                  </h2>
+                  <p className="text-gray-600 mt-1">
+                    {filteredCourses.length > 0 ? (
+                      <>
+                        Hiển thị {(currentPage - 1) * itemsPerPage + 1} -{" "}
+                        {Math.min(currentPage * itemsPerPage, totalCourses)} /{" "}
+                        {totalCourses} khóa học
+                      </>
+                    ) : (
+                      "Không có khóa học nào"
+                    )}
+                  </p>
+                </div>
+
+                {/* Sort */}
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-4 py-2 border rounded-lg bg-white"
+                >
+                  <option value="newest">Mới nhất</option>
+                  <option value="popular">Phổ biến</option>
+                  <option value="rating">Đánh giá</option>
+                  <option value="price-asc">Giá tăng</option>
+                  <option value="price-desc">Giá giảm</option>
+                </select>
+              </div>
+
+              {/* Courses Grid */}
+              {filteredCourses.length > 0 ? (
+                <>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    {filteredCourses.map((course) => (
+                      <ProductCard
+                        key={course._id}
+                        product={{
+                          _id: course._id,
+                          id: course._id,
+                          title: course.title,
+                          slug: course.slug,
+                          description: course.description,
+                          thumbnail: course.thumbnail,
+                          price: course.price,
+                          originalPrice: course.originalPrice || course.price,
+                          discountedPrice: course.price,
+                          discountPercentage: course.discountPercentage || 0,
+                          category: course.category,
+                          instructor: course.instructor,
+                          rating: course.rating,
+                          students: course.students,
+                          reviews: course.reviews || 0,
+                          level: course.level,
+                          language: course.language || "Tiếng Anh",
+                          duration: course.duration,
+                          lectures: course.lectures,
+                          tags: course.tags || [],
+                          isBestseller: course.isBestseller || false,
+                          isNew: course.isNew || false,
+                        }}
+                        onClick={(product) =>
+                          navigate(`/course/${product.slug}`)
+                        }
+                      />
+                    ))}
+                  </div>
+
+                  {/* Pagination */}
+                  {totalPages > 1 && (
+                    <div className="flex justify-center gap-2 mt-8">
+                      <button
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 1}
+                        className="px-4 py-2 border rounded-lg disabled:opacity-50"
+                      >
+                        ← Trước
+                      </button>
+
+                      {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                        const page = i + 1;
+                        return (
+                          <button
+                            key={page}
+                            onClick={() => handlePageChange(page)}
+                            className={`px-4 py-2 rounded-lg ${
+                              page === currentPage
+                                ? "bg-blue-600 text-white"
+                                : "border"
+                            }`}
+                          >
+                            {page}
+                          </button>
+                        );
+                      })}
+
+                      <button
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage === totalPages}
+                        className="px-4 py-2 border rounded-lg disabled:opacity-50"
+                      >
+                        Sau →
+                      </button>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="text-center py-16 bg-white rounded-xl">
+                  <div className="text-6xl mb-4">📚</div>
+                  <h3 className="text-2xl font-bold mb-2">
+                    Không tìm thấy khóa học
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    Thử thay đổi bộ lọc hoặc tìm kiếm
+                  </p>
                   <button
-                    onClick={() => {
-                      setSearchQuery("");
-                      window.history.pushState({}, "", "/");
-                    }}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                    onClick={handleClearFilters}
+                    className="px-6 py-3 bg-blue-600 text-white rounded-lg"
                   >
-                    ✕ Xóa tìm kiếm
+                    Xóa bộ lọc
                   </button>
                 </div>
-              </div>
-            )}
-
-            {/* Header */}
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h2 className="text-2xl font-bold">
-                  {searchQuery ? "Kết quả tìm kiếm" : "Khóa học phổ biến"}
-                </h2>
-                <p className="text-gray-600 mt-1">
-                  {filteredCourses.length > 0 ? (
-                    <>
-                      Hiển thị {(currentPage - 1) * itemsPerPage + 1} -{" "}
-                    {Math.min(
-                      currentPage * itemsPerPage,
-                      totalCourses
-                    )} /{" "}
-                    {totalCourses} khóa học
-                    </>
-                  ) : (
-                    "Không có khóa học nào"
-                  )}
-                </p>
-              </div>
-
-              {/* Sort */}
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border rounded-lg bg-white"
-              >
-                <option value="newest">Mới nhất</option>
-                <option value="popular">Phổ biến</option>
-                <option value="rating">Đánh giá</option>
-                <option value="price-asc">Giá tăng</option>
-                <option value="price-desc">Giá giảm</option>
-              </select>
-            </div>
-
-            {/* Courses Grid */}
-            {filteredCourses.length > 0 ? (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                  {filteredCourses.map((course) => (
-                    <ProductCard
-                      key={course._id}
-                      product={{
-                        _id: course._id,
-                        id: course._id,
-                        title: course.title,
-                        slug: course.slug,
-                        description: course.description,
-                        thumbnail: course.thumbnail,
-                        price: course.price,
-                        originalPrice: course.originalPrice || course.price,
-                        discountedPrice: course.price,
-                        discountPercentage: course.discountPercentage || 0,
-                        category: course.category,
-                        instructor: course.instructor,
-                        rating: course.rating,
-                        students: course.students,
-                        reviews: course.reviews || 0,
-                        level: course.level,
-                        language: course.language || "Tiếng Anh",
-                        duration: course.duration,
-                        lectures: course.lectures,
-                        tags: course.tags || [],
-                        isBestseller: course.isBestseller || false,
-                        isNew: course.isNew || false,
-                      }}
-                      onClick={(product) => navigate(`/course/${product.slug}`)}
-                    />
-                  ))}
-                </div>
-
-                {/* Pagination */}
-                {totalPages > 1 && (
-                  <div className="flex justify-center gap-2 mt-8">
-                    <button
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      disabled={currentPage === 1}
-                      className="px-4 py-2 border rounded-lg disabled:opacity-50"
-                    >
-                      ← Trước
-                    </button>
-
-                    {[...Array(Math.min(5, totalPages))].map((_, i) => {
-                      const page = i + 1;
-                      return (
-                        <button
-                          key={page}
-                          onClick={() => handlePageChange(page)}
-                          className={`px-4 py-2 rounded-lg ${
-                            page === currentPage
-                              ? "bg-blue-600 text-white"
-                              : "border"
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      );
-                    })}
-
-                    <button
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      disabled={currentPage === totalPages}
-                      className="px-4 py-2 border rounded-lg disabled:opacity-50"
-                    >
-                      Sau →
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="text-center py-16 bg-white rounded-xl">
-                <div className="text-6xl mb-4">📚</div>
-                <h3 className="text-2xl font-bold mb-2">
-                  Không tìm thấy khóa học
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  Thử thay đổi bộ lọc hoặc tìm kiếm
-                </p>
-                <button
-                  onClick={handleClearFilters}
-                  className="px-6 py-3 bg-blue-600 text-white rounded-lg"
-                >
-                  Xóa bộ lọc
-                </button>
-              </div>
-            )}
-          </main>
+              )}
+            </main>
+          </div>
         </div>
+        {/* Mailchimp subscription form  */}
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <MailchimpForm />
         </div>
       </div>
     </>
