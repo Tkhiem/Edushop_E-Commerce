@@ -44,10 +44,13 @@ app.use(
 // Health check
 app.get("/", (req, res) => {
   const port = process.env.PORT || 5000;
+  const apiDocUrl = process.env.NODE_ENV === 'production' 
+    ? `${req.protocol}://${req.get('host')}/api-docs`
+    : `http://localhost:${port}/api-docs`;
   res.json({
     message: "EduShop API is running 🚀",
     version: "2.0.0",
-    documentation: `http://localhost:${port}/api-docs`,
+    documentation: apiDocUrl,
     endpoints: {
       auth: "/api/auth",
       courses: "/api/courses",
