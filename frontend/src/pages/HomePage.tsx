@@ -120,7 +120,8 @@ const HomePage: React.FC = () => {
       console.log("🔍 Fetching courses with params:", params);
 
       // Direct axios call to backend
-      const response = await axios.get("http://localhost:5000/api/courses", {
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+      const response = await axios.get(`${apiUrl}/courses`, {
         params,
         headers: {
           "Content-Type": "application/json",
