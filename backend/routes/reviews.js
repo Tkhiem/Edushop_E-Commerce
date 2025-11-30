@@ -316,6 +316,16 @@ router.post("/", authenticate, async (req, res) => {
     });
   } catch (error) {
     console.error("Error adding review:", error);
+    
+    // Handle E11000 duplicate key error
+    if (error.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: "You have already reviewed this course",
+        error: "Duplicate review not allowed",
+      });
+    }
+    
     res.status(500).json({
       success: false,
       message: "Failed to add review",
