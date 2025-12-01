@@ -4,7 +4,7 @@ import React, { useState } from "react";
 export default function MailchimpForm() {
   const [email, setEmail] = useState("");
   const actionUrl =
-    "https://gmail.us6.list-manage.com/subscribe/post?u=d26b93796043e86547e97d053&amp;id=129d54e961&amp;f_id=0059cce2f0";
+    "https://app.us18.list-manage.com/subscribe/post?u=25d6a01598cb538cbc540a6f6&amp;id=1ebc21e2a3&amp;f_id=00c1b0e6f0";
 
   return (
     <div className="max-w-5xl mx-auto">
@@ -70,4 +70,5 @@ export default function MailchimpForm() {
     </div>
   );
 }
+
 // ...existing code...
