@@ -6,9 +6,7 @@ import CartItem from "../components/cart/CartItem";
 import CartSummary from "../components/cart/CartSummary";
 import { ShoppingCart, ArrowLeft, LogIn } from "lucide-react";
 import Checkout from "../components/orders/Checkout";
-import {
-  getPurchaseHistory,
-} from "../utils/purchaseHistory";
+import { getPurchaseHistory } from "../utils/purchaseHistory";
 import type { PurchaseHistoryEntry } from "../utils/purchaseHistory";
 import { formatPrice } from "../utils/currency";
 const CartPage: React.FC = () => {
@@ -23,9 +21,9 @@ const CartPage: React.FC = () => {
   } = useCart();
   const { isAuthenticated } = useAuth();
   const [showCheckout, setShowCheckout] = useState(false);
-  const [purchaseHistory, setPurchaseHistory] = useState<PurchaseHistoryEntry[]>(
-    []
-  );
+  // const [purchaseHistory, setPurchaseHistory] = useState<
+  //   PurchaseHistoryEntry[]
+  // >([]);
 
   // ✅ Calculate totals (backend prices are in USD)
   const { subtotal, total } = useMemo(() => {
@@ -43,13 +41,13 @@ const CartPage: React.FC = () => {
     };
   }, [cart]);
 
-  useEffect(() => {
-    setPurchaseHistory(getPurchaseHistory());
-  }, []);
+  // useEffect(() => {
+  //   setPurchaseHistory(getPurchaseHistory());
+  // }, []);
 
-  const refreshPurchaseHistory = () => {
-    setPurchaseHistory(getPurchaseHistory());
-  };
+  // const refreshPurchaseHistory = () => {
+  //   setPurchaseHistory(getPurchaseHistory());
+  // };
 
   const handleCheckout = () => {
     setShowCheckout(true);
@@ -58,7 +56,7 @@ const CartPage: React.FC = () => {
   const handlePaymentSuccess = () => {
     fetchCart();
     setShowCheckout(false);
-    refreshPurchaseHistory();
+    // refreshPurchaseHistory();
     navigate("/my-courses");
   };
 
@@ -170,7 +168,7 @@ const CartPage: React.FC = () => {
             {/* <div className="mt-2">
               <Checkout amount={total.toFixed(2)} />
             </div> */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
+            {/* <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-semibold text-gray-900">
                   Lịch sử mua gần đây
@@ -216,7 +214,7 @@ const CartPage: React.FC = () => {
                   ))}
                 </ul>
               )}
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

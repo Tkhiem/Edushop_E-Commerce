@@ -10,6 +10,7 @@ export type CheckoutHistoryItem = {
 
 export interface PurchaseHistoryEntry {
   id: string;
+  userId: string;
   totalUsd: number;
   totalVnd?: number;
   currency: string;
@@ -69,15 +70,22 @@ export const mapCartItemsToHistory = (
     .filter((item) => !!item.courseId);
 };
 
-export const getPurchaseHistory = (): PurchaseHistoryEntry[] => {
-  return readStorage<PurchaseHistoryEntry[]>(HISTORY_KEY) || [];
+export const getPurchaseHistory = (userId: string): PurchaseHistoryEntry[] => {
+  const history = readStorage<PurchaseHistoryEntry[]>(HISTORY_KEY) || [];
+
+  console.log("history:", history);
+  return history.filter((h) => h.userId === userId);
 };
 
 export const addPurchaseHistory = (
   entry: PurchaseHistoryEntry
 ): PurchaseHistoryEntry[] => {
-  const history = getPurchaseHistory();
-  const nextHistory = [entry, ...history].slice(0, 20);
+  const history = readStorage<PurchaseHistoryEntry[]>(HISTORY_KEY) || [];
+  // Nếu ID đã tồn tại thì KHÔNG thêm nữa
+  if (history.some((h) => h.id === entry.id)) {
+    return history;
+  }
+  const nextHistory = [entry, ...history];
   writeStorage(HISTORY_KEY, nextHistory);
   return nextHistory;
 };
@@ -94,4 +102,3 @@ export const clearPendingPurchase = () => {
   if (!isBrowser) return;
   window.localStorage.removeItem(PENDING_KEY);
 };
-

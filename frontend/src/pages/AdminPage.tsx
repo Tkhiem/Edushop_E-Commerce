@@ -30,6 +30,16 @@ const AdminPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
   const token = localStorage.getItem("token");
+  // Exchange rate: 1 USD = 24,500 VND
+  const USD_TO_VND = 24500;
+
+  const formatVND = (amount: number | string) => {
+    const num = typeof amount === "string" ? parseFloat(amount) : amount;
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(num * USD_TO_VND);
+  };
   // Redirect if not admin
   if (!isAdmin) {
     return <Navigate to="/" replace />;
@@ -48,6 +58,7 @@ const AdminPage: React.FC = () => {
         });
         if (!res.ok) throw new Error("Failed to fetch admin stats");
         const data = await res.json();
+        console.log("data", data);
         setStats(data.stats || []);
         setRecentActivities(data.recent || []);
       } catch (err: any) {
@@ -160,7 +171,9 @@ const AdminPage: React.FC = () => {
                         </span>
                       </div>
                       <h3 className="text-2xl font-bold text-gray-900 mb-1">
-                        {stat.value}
+                        {stat.label === "Doanh thu"
+                          ? formatVND(stat.value)
+                          : stat.value}
                       </h3>
                       <p className="text-gray-600 text-sm">{stat.label}</p>
                     </div>

@@ -49,7 +49,7 @@ export const getStats = async (req, res) => {
       },
       {
         label: "Doanh thu",
-        value: `$${Number(totalRevenue).toLocaleString()}`,
+        value: totalRevenue.toString(),
         icon: "DollarSign",
         color: "bg-red-500",
         change: null,

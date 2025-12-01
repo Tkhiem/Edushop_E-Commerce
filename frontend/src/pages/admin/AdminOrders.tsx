@@ -31,6 +31,16 @@ const AdminOrders: React.FC = () => {
   const [pages, setPages] = useState(1);
   const perPage = 20;
 
+  // Exchange rate: 1 USD = 24,500 VND (có thể lấy từ API nếu cần)
+  const USD_TO_VND = 24500;
+
+  const formatVND = (amount: number) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount * USD_TO_VND);
+  };
+
   useEffect(() => {
     fetchOrders();
   }, [page, statusFilter]);
@@ -45,8 +55,6 @@ const AdminOrders: React.FC = () => {
         q: searchTerm,
         status: statusFilter,
       };
-      // if (searchTerm) params.q = searchTerm;
-      // if (statusFilter) params.status = statusFilter;
       const res = await axios.get("/admin/transactions", {
         params,
         headers: {
@@ -64,7 +72,6 @@ const AdminOrders: React.FC = () => {
   };
 
   const getStatusBadge = (status: string) => {
-    // show friendly badges for DB statuses
     const map = {
       created: { cls: "bg-yellow-100 text-yellow-700", label: "Đang xử lý" },
       completed: { cls: "bg-green-100 text-green-700", label: "Hoàn thành" },
@@ -131,8 +138,8 @@ const AdminOrders: React.FC = () => {
             >
               <option value="">Tất cả trạng thái</option>
               <option value="completed">Hoàn thành</option>
-              <option value="pending">Đang xử lý</option>
-              <option value="cancelled">Đã hủy</option>
+              <option value="created">Đang xử lý</option>
+              <option value="failed">Đã hủy</option>
             </select>
           </div>
         </div>
@@ -194,8 +201,8 @@ const AdminOrders: React.FC = () => {
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-1 font-semibold text-gray-900">
-                            <DollarSign className="w-4 h-4 text-green-600" />
-                            {Number(order.total).toFixed(2)}
+                            {/* <DollarSign className="w-4 h-4 text-green-600" /> */}
+                            {formatVND(order.total)}
                           </div>
                         </td>
                         <td className="px-6 py-4">

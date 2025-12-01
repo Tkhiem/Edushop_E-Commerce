@@ -223,7 +223,14 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
                           <BookOpen className="w-5 h-5 text-green-600" />
                           <span>Khóa học của tôi</span>
                         </Link>
-
+                        <Link
+                          to="/purchase-history"
+                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-50 transition-colors text-gray-700"
+                          onClick={() => setIsUserMenuOpen(false)}
+                        >
+                          <Settings className="w-5 h-5 text-gray-600" />
+                          <span>Lịch sử mua hàng</span>
+                        </Link>
                         {isAdmin && (
                           <Link
                             to="/admin"

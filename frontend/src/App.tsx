@@ -16,7 +16,7 @@ import NotFound from "./pages/NotFound";
 import MyCoursesPage from "./pages/MyCoursesPage";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import VnPayReturnPage from "./pages/VnPayReturnPage";
-
+import PurchaseHistoryPage from "./pages/PurchaseHistoryPage";
 const PAYPAL_CLIENT_ID =
   "AW2AsaZhe-zYNhtNftfNjgkCfTuqHEsCUXVXG4B3MhHDit1dUIHmOa3qa47HGuTwHcnmJyo6aR4OyY_v";
 function App() {
@@ -28,24 +28,28 @@ function App() {
             <CartProvider>
               <FavoritesProvider>
                 <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
 
-                <Route path="/" element={<Layout />}>
-                  <Route index element={<HomePage />} />
-                  <Route path="cart" element={<CartPage />} />
-                  <Route path="favorites" element={<FavoritesPage />} />
-                  <Route path="course/:slug" element={<CourseDetailPage />} />
-                  <Route path="profile" element={<ProfilePage />} />
-                  <Route path="my-courses" element={<MyCoursesPage />} />
-                  <Route path="admin" element={<AdminPage />} />
-                </Route>
-                <Route
-                  path="/payment/vnpay-return"
-                  element={<VnPayReturnPage />}
-                />
+                  <Route path="/" element={<Layout />}>
+                    <Route index element={<HomePage />} />
+                    <Route path="cart" element={<CartPage />} />
+                    <Route path="favorites" element={<FavoritesPage />} />
+                    <Route path="course/:slug" element={<CourseDetailPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="my-courses" element={<MyCoursesPage />} />
+                    <Route path="admin" element={<AdminPage />} />
+                  </Route>
+                  <Route
+                    path="/payment/vnpay-return"
+                    element={<VnPayReturnPage />}
+                  />
+                  <Route
+                    path="/purchase-history"
+                    element={<PurchaseHistoryPage />}
+                  />
 
-                <Route path="*" element={<NotFound />} />
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </FavoritesProvider>
             </CartProvider>

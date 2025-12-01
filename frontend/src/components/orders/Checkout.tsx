@@ -30,6 +30,8 @@ const Checkout: React.FC<CheckoutProps> = ({
   const [paymentMethod, setPaymentMethod] = useState<"paypal" | "vnpay">(
     "paypal"
   );
+  const SERVER =
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:5000/api/orders";
 
   // Use axios instance (`/api` base handled by `src/api/axiosConfig.ts`).
 
@@ -41,10 +43,7 @@ const Checkout: React.FC<CheckoutProps> = ({
   const validAmount =
     !isNaN(numericAmount) && numericAmount > 0 && items.length > 0;
 
-  const normalizedItems = useMemo(
-    () => mapCartItemsToHistory(items),
-    [items]
-  );
+  const normalizedItems = useMemo(() => mapCartItemsToHistory(items), [items]);
 
   const displayAmount = Number.isFinite(numericAmount)
     ? formatPrice(numericAmount)
@@ -78,7 +77,7 @@ const Checkout: React.FC<CheckoutProps> = ({
       if (!paymentUrl) {
         throw new Error("Không nhận được liên kết thanh toán VNPay");
       }
-      console.log("pay",paymentUrl);
+      console.log("pay", paymentUrl);
       window.location.href = paymentUrl;
     } catch (error) {
       console.error(error);
@@ -93,8 +92,10 @@ const Checkout: React.FC<CheckoutProps> = ({
     referenceId?: string
   ) => {
     if (!numericAmount || numericAmount <= 0) return;
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
     addPurchaseHistory({
       id: referenceId || `${method}-${Date.now()}`,
+      userId: user.id,
       totalUsd: numericAmount,
       totalVnd: amountVnd,
       currency,
@@ -164,8 +165,7 @@ const Checkout: React.FC<CheckoutProps> = ({
                       borderColor:
                         paymentMethod === method ? "#2563eb" : "#e2e8f0",
                       color: paymentMethod === method ? "#1d4ed8" : "#475569",
-                      background:
-                        paymentMethod === method ? "#eff6ff" : "#fff",
+                      background: paymentMethod === method ? "#eff6ff" : "#fff",
                     }}
                     disabled={isProcessing}
                   >
@@ -281,4 +281,3 @@ const Checkout: React.FC<CheckoutProps> = ({
 };
 
 export default Checkout;
-
